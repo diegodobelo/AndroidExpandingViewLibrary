@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ExpandingItem">
+        <attr name="item_layout" format="reference"/>
+        <attr name="sub_item_layout" format="reference"/>
+        <attr name="indicator_size" format="dimension"/>
+    </declare-styleable>
+</resources>

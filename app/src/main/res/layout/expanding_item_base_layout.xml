@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/icon_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <View
+                android:id="@+id/icon_indicator_top"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/expanding_item_circle_base"/>
+            <ImageView
+                android:id="@+id/indicator_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/icon_indicator_middle"
+            android:layout_width="32dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="-16dp"
+            android:layout_below="@id/icon_container"
+            android:background="@android:color/holo_blue_light"/>
+
+        <View
+            android:id="@+id/icon_indicator_bottom"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="-16dp"
+            android:layout_below="@id/icon_indicator_middle"
+            android:background="@drawable/expanding_item_circle_base"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/base_list_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
+
+</LinearLayout>
