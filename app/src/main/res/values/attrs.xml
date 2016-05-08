@@ -3,6 +3,9 @@
     <declare-styleable name="ExpandingItem">
         <attr name="item_layout" format="reference"/>
         <attr name="sub_item_layout" format="reference"/>
+        <attr name="separator_layout" format="reference"/>
         <attr name="indicator_size" format="dimension"/>
+        <attr name="indicator_margin_left" format="dimension"/>
+        <attr name="indicator_margin_right" format="dimension"/>
     </declare-styleable>
 </resources>

@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ public class ExpandingItem extends RelativeLayout {
     public static final int DEFAULT_ANIM_DURATION = 600;
 
     private ViewGroup mItemLayout;
+    private ViewGroup mSeparatorLayout;
     private int mSubItemRes;
     private LayoutInflater mInflater;
     private boolean mSubItemsShown;
@@ -36,6 +36,8 @@ public class ExpandingItem extends RelativeLayout {
     private int mSubItemCount;
     private int mIndicatorSize;
     private int mAnimationDuration;
+    private int mIndicatorMarginLeft;
+    private int mIndicatorMarginRight;
 
     public ExpandingItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -59,10 +61,16 @@ public class ExpandingItem extends RelativeLayout {
 
         try {
             int itemLayoutId = array.getResourceId(R.styleable.ExpandingItem_item_layout, 0);
+            int separatorLayoutId = array.getResourceId(R.styleable.ExpandingItem_separator_layout, 0);
             mSubItemRes = array.getResourceId(R.styleable.ExpandingItem_sub_item_layout, 0);
             mIndicatorSize = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_size, 0);
+            mIndicatorMarginLeft = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_margin_left, 0);
+            mIndicatorMarginRight = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_margin_right, 0);
             if (itemLayoutId != 0) {
                 mItemLayout = (ViewGroup) mInflater.inflate(itemLayoutId, null, false);
+            }
+            if (separatorLayoutId != 0) {
+                mSeparatorLayout = (ViewGroup) mInflater.inflate(separatorLayoutId, null, false);
             }
         } finally {
             array.recycle();
@@ -74,6 +82,10 @@ public class ExpandingItem extends RelativeLayout {
 
         addItem(mItemLayout);
         addView(mBaseLayout);
+
+        if (mSeparatorLayout != null) {
+            addView(mSeparatorLayout);
+        }
 
         setupIndicatorBackground();
     }
@@ -87,8 +99,17 @@ public class ExpandingItem extends RelativeLayout {
         setViewWidth(mBaseLayout.findViewById(R.id.icon_indicator_bottom), mIndicatorSize);
         setViewWidth(mBaseLayout.findViewById(R.id.icon_indicator_middle), mIndicatorSize);
 
+        mItemLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                setViewMargin(mBaseLayout.findViewById(R.id.indicator_container),
+                        mIndicatorMarginLeft, mItemLayout.getMeasuredHeight()/2 - mIndicatorSize/2, mIndicatorMarginRight, 0);
+            }
+        });
+
         setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_middle), (-1 * mIndicatorSize/2));
         setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_bottom), (-1 * mIndicatorSize/2));
+
     }
 
     private void setupIndicatorBackground() {
@@ -99,7 +120,7 @@ public class ExpandingItem extends RelativeLayout {
         super(context);
     }
 
-    private void addItem(ViewGroup item) {
+    private void addItem(final ViewGroup item) {
         if (item != null) {
             mBaseListLayout.addView(item);
             item.setOnClickListener(new OnClickListener() {
@@ -136,9 +157,22 @@ public class ExpandingItem extends RelativeLayout {
         ViewGroup subItemLayout = (ViewGroup) mInflater.inflate(mSubItemRes, null, false);
         mBaseSubListLayout.addView(subItemLayout);
         mSubItemCount++;
-        //TODO: should call in another place
-        setSubItemHeight(subItemLayout);
+        setSubItemDimensions(subItemLayout);
         return subItemLayout;
+    }
+
+    public void beginSubItemCreation(){
+        mBaseSubListLayout.removeAllViewsInLayout();
+    }
+
+    public void endSubItemCreation() {
+        mBaseSubListLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                setViewHeight(mBaseSubListLayout, 0);
+            }
+        });
+
     }
 
     private void animateSubItemsIn() {
@@ -147,7 +181,7 @@ public class ExpandingItem extends RelativeLayout {
         }
     }
 
-    private void setSubItemHeight(final ViewGroup v) {
+    private void setSubItemDimensions(final ViewGroup v) {
         v.post(new Runnable() {
             @Override
             public void run() {
@@ -155,7 +189,7 @@ public class ExpandingItem extends RelativeLayout {
                 if (mSubItemHeight <= 0) {
                     mSubItemHeight = v.getMeasuredHeight();
                     mSubItemWidth = v.getMeasuredWidth();
-                    setViewHeight(mBaseSubListLayout, 0);
+
                 }
             }
         });
@@ -183,8 +217,6 @@ public class ExpandingItem extends RelativeLayout {
         int delay = index * mAnimationDuration / mSubItemCount;
         int invertedDelay = (mSubItemCount - index) * mAnimationDuration / mSubItemCount;
         animation.setStartDelay(mSubItemsShown ? delay/2 : invertedDelay/2);
-
-        final float x = viewGroup.getX();
 
         animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -246,8 +278,12 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     private void setViewMarginTop(View v, int marginTop) {
+        setViewMargin(v, 0, marginTop, 0, 0);
+    }
+
+    private void setViewMargin(View v, int left, int top, int right, int bottom) {
         final ViewGroup.MarginLayoutParams params = (MarginLayoutParams) v.getLayoutParams();
-        params.setMargins(0, marginTop, 0, 0);
+        params.setMargins(left, top, right, bottom);
         v.requestLayout();
     }
 }

@@ -6,4 +6,7 @@
     android:layout_height="wrap_content"
     app:item_layout="@layout/expanding_item"
     app:sub_item_layout="@layout/expanding_sub_item"
-    app:indicator_size="34dp"/>
+    app:separator_layout="@layout/separator_layout"
+    app:indicator_size="34dp"
+    app:indicator_margin_left="16dp"
+    app:indicator_margin_right="16dp"/>
