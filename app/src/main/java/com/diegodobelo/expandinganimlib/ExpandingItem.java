@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +18,14 @@ import android.widget.RelativeLayout;
 /**
  * Created by diego on 5/5/16.
  */
-public class ExpandingItem extends LinearLayout {
+public class ExpandingItem extends RelativeLayout {
     private ViewGroup mItemLayout;
     private int mSubItemRes;
     private LayoutInflater mInflater;
     private boolean mSubItemsShown;
-    private LinearLayout mBaseLayout;
+    private RelativeLayout mBaseLayout;
     private LinearLayout mBaseListLayout;
+    private LinearLayout mBaseSubListLayout;
     private ImageView mIndicatorImage;
     private View mIndicatorBackground;
     private int mItemHeight;
@@ -39,14 +41,14 @@ public class ExpandingItem extends LinearLayout {
 
     public ExpandingItem(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setOrientation(LinearLayout.VERTICAL);
 
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.ExpandingItem, 0, 0);
         mInflater = LayoutInflater.from(context);
-        mBaseLayout = (LinearLayout) mInflater.inflate(R.layout.expanding_item_base_layout,
+        mBaseLayout = (RelativeLayout) mInflater.inflate(R.layout.expanding_item_base_layout,
                 null, false);
         mBaseListLayout = (LinearLayout) mBaseLayout.findViewById(R.id.base_list_layout);
+        mBaseSubListLayout = (LinearLayout) mBaseLayout.findViewById(R.id.base_sub_list_layout);
         mIndicatorImage = (ImageView) mBaseLayout.findViewById(R.id.indicator_image);
 
         mBaseLayout.findViewById(R.id.icon_container).bringToFront();
@@ -87,9 +89,6 @@ public class ExpandingItem extends LinearLayout {
 
     private void setupIndicatorBackground() {
         mIndicatorBackground = mBaseLayout.findViewById(R.id.icon_indicator_middle);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mIndicatorBackground.getLayoutParams();
-        mIconIndicatorHeight = params.height;
-        mIconIndicatorWidth = params.width;
     }
 
     public ExpandingItem(Context context) {
@@ -103,6 +102,7 @@ public class ExpandingItem extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     toggleSubItems();
+                    expandSubItems();
                     expandIconIndicator();
                 }
             });
@@ -129,10 +129,9 @@ public class ExpandingItem extends LinearLayout {
     public View createSubItem() {
         //TODO: verify if not null
         ViewGroup subItemLayout = (ViewGroup) mInflater.inflate(mSubItemRes, null, false);
-        subItemLayout.setTag(SUB_ITEM_TAG);
-        mBaseListLayout.addView(subItemLayout);
+        mBaseSubListLayout.addView(subItemLayout);
         mSubItemCount++;
-        subItemLayout.setVisibility(GONE);
+        setSubItemHeight(subItemLayout);
         return subItemLayout;
     }
 
@@ -141,7 +140,10 @@ public class ExpandingItem extends LinearLayout {
             @Override
             public void run() {
                 //TODO: verify if it is set before used
-                mSubItemHeight = v.getMeasuredHeight();
+                if (mSubItemHeight <= 0) {
+                    mSubItemHeight = v.getMeasuredHeight();
+                    setViewHeight(mBaseSubListLayout, 0);
+                }
             }
         });
 
@@ -160,21 +162,33 @@ public class ExpandingItem extends LinearLayout {
 
     private void toggleSubItems() {
         mSubItemsShown = !mSubItemsShown;
-        for (int i = 0; i < mBaseListLayout.getChildCount(); i++) {
-            ViewGroup subItem = (ViewGroup) mBaseListLayout.getChildAt(i);
-            if (subItem.getTag() != null && subItem.getTag().equals(SUB_ITEM_TAG)) {
-                subItem.setVisibility(mSubItemsShown ? VISIBLE : GONE);
-                if (subItem.getVisibility() == VISIBLE && mSubItemHeight == 0) {
-                    setSubItemHeight(subItem); //need to be calculated when visible
-                }
+    }
+
+    private void animateViewIn(final ViewGroup viewGroup) {
+        viewGroup.setVisibility(VISIBLE);
+        ValueAnimator animation = ValueAnimator.ofFloat(0f, 1f);
+        animation.setDuration(300);
+
+        final float initialPos = viewGroup.getY();
+
+        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float val = (float) animation.getAnimatedValue();
+                final int totalHeight = mSubItemHeight;
+                viewGroup.setY(initialPos + (totalHeight * val));
+//                setViewHeight(viewGroup, (int) (totalHeight * val));
+                Log.e("Blastoise", "Total height " + (int) (totalHeight * val));
             }
-        }
+        });
+
+        animation.start();
     }
 
     private void expandIconIndicator() {
         if (mIndicatorBackground != null) {
             ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
-            animation.setDuration(300);
+            animation.setDuration(1300);
 
             animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -182,6 +196,27 @@ public class ExpandingItem extends LinearLayout {
                     float val = (float) animation.getAnimatedValue();
                     final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize + mItemHeight;
                     setViewHeight(mIndicatorBackground, (int) (totalHeight * val));
+                    Log.e("Blastoise", "Height << " + mSubItemHeight);
+                }
+            });
+
+            animation.start();
+        }
+    }
+
+    private void expandSubItems() {
+        if (mBaseSubListLayout != null) {
+            ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
+            animation.setDuration(1300);
+
+            animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float val = (float) animation.getAnimatedValue();
+                    final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize + mItemHeight;
+                    setViewHeight(mBaseSubListLayout, (int) (totalHeight * val));
+//                    setViewHeight(mBaseSubListLayout, (int) (totalHeight * val));
+//                    Log.e("Blastoise", "Height << " + mSubItemHeight);
                 }
             });
 
