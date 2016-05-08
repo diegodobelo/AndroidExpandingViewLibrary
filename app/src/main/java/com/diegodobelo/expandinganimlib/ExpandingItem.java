@@ -19,6 +19,8 @@ import android.widget.RelativeLayout;
  * Created by diego on 5/5/16.
  */
 public class ExpandingItem extends RelativeLayout {
+    public static final int DEFAULT_ANIM_DURATION = 600;
+
     private ViewGroup mItemLayout;
     private int mSubItemRes;
     private LayoutInflater mInflater;
@@ -30,10 +32,10 @@ public class ExpandingItem extends RelativeLayout {
     private View mIndicatorBackground;
     private int mItemHeight;
     private int mSubItemHeight;
+    private int mSubItemWidth;
     private int mSubItemCount;
     private int mIndicatorSize;
-
-    public static final String SUB_ITEM_TAG = "SUB_ITEM_TAG";
+    private int mAnimationDuration;
 
     public ExpandingItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -41,6 +43,8 @@ public class ExpandingItem extends RelativeLayout {
 
     public ExpandingItem(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        mAnimationDuration = DEFAULT_ANIM_DURATION;
 
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.ExpandingItem, 0, 0);
@@ -104,6 +108,7 @@ public class ExpandingItem extends RelativeLayout {
                     toggleSubItems();
                     expandSubItems();
                     expandIconIndicator();
+                    animateSubItemsIn();
                 }
             });
             setItemHeight(item);
@@ -131,8 +136,15 @@ public class ExpandingItem extends RelativeLayout {
         ViewGroup subItemLayout = (ViewGroup) mInflater.inflate(mSubItemRes, null, false);
         mBaseSubListLayout.addView(subItemLayout);
         mSubItemCount++;
+        //TODO: should call in another place
         setSubItemHeight(subItemLayout);
         return subItemLayout;
+    }
+
+    private void animateSubItemsIn() {
+        for (int i = 0; i < mSubItemCount; i++) {
+            animateViewIn((ViewGroup) mBaseSubListLayout.getChildAt(i), i);
+        }
     }
 
     private void setSubItemHeight(final ViewGroup v) {
@@ -142,6 +154,7 @@ public class ExpandingItem extends RelativeLayout {
                 //TODO: verify if it is set before used
                 if (mSubItemHeight <= 0) {
                     mSubItemHeight = v.getMeasuredHeight();
+                    mSubItemWidth = v.getMeasuredWidth();
                     setViewHeight(mBaseSubListLayout, 0);
                 }
             }
@@ -164,21 +177,21 @@ public class ExpandingItem extends RelativeLayout {
         mSubItemsShown = !mSubItemsShown;
     }
 
-    private void animateViewIn(final ViewGroup viewGroup) {
-        viewGroup.setVisibility(VISIBLE);
-        ValueAnimator animation = ValueAnimator.ofFloat(0f, 1f);
-        animation.setDuration(300);
+    private void animateViewIn(final ViewGroup viewGroup, int index) {
+        ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
+        animation.setDuration(mAnimationDuration);
+        int delay = index * mAnimationDuration / mSubItemCount;
+        int invertedDelay = (mSubItemCount - index) * mAnimationDuration / mSubItemCount;
+        animation.setStartDelay(mSubItemsShown ? delay/2 : invertedDelay/2);
 
-        final float initialPos = viewGroup.getY();
+        final float x = viewGroup.getX();
 
         animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float val = (float) animation.getAnimatedValue();
-                final int totalHeight = mSubItemHeight;
-                viewGroup.setY(initialPos + (totalHeight * val));
-//                setViewHeight(viewGroup, (int) (totalHeight * val));
-                Log.e("Blastoise", "Total height " + (int) (totalHeight * val));
+                viewGroup.setAlpha(val);
+                viewGroup.setX((mSubItemWidth * val) - mSubItemWidth);
             }
         });
 
@@ -188,15 +201,13 @@ public class ExpandingItem extends RelativeLayout {
     private void expandIconIndicator() {
         if (mIndicatorBackground != null) {
             ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
-            animation.setDuration(1300);
-
+            animation.setDuration(mAnimationDuration);
+            final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize + mItemHeight;
             animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float val = (float) animation.getAnimatedValue();
-                    final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize + mItemHeight;
                     setViewHeight(mIndicatorBackground, (int) (totalHeight * val));
-                    Log.e("Blastoise", "Height << " + mSubItemHeight);
                 }
             });
 
@@ -207,16 +218,14 @@ public class ExpandingItem extends RelativeLayout {
     private void expandSubItems() {
         if (mBaseSubListLayout != null) {
             ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
-            animation.setDuration(1300);
+            animation.setDuration(mAnimationDuration);
 
+            final int totalHeight = (mSubItemHeight * mSubItemCount);
             animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float val = (float) animation.getAnimatedValue();
-                    final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize + mItemHeight;
                     setViewHeight(mBaseSubListLayout, (int) (totalHeight * val));
-//                    setViewHeight(mBaseSubListLayout, (int) (totalHeight * val));
-//                    Log.e("Blastoise", "Height << " + mSubItemHeight);
                 }
             });
 

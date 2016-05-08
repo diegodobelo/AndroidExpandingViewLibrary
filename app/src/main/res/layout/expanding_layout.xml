@@ -6,4 +6,4 @@
     android:layout_height="wrap_content"
     app:item_layout="@layout/expanding_item"
     app:sub_item_layout="@layout/expanding_sub_item"
-    app:indicator_size="44dp"/>
+    app:indicator_size="34dp"/>

@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_main);
         List<String[]> subItems = new ArrayList<>();
         subItems.add(new String[]{"Cat"});
-        subItems.add(new String[]{"House", "Boat", "Dog"});
+        subItems.add(new String[]{"House", "Boat", "Dog", "Candy", "Collection", "Sport", "Ball", "Head"});
         subItems.add(new String[]{"Cat", "Bed"});
         ExpandingAdapter adapter = new ExpandingAdapter(new String[]{"John", "Mary", "Ana", "Luke", "Paul", "Peter"}, subItems);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(this);
