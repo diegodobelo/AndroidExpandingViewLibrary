@@ -78,6 +78,23 @@ public class MainActivity extends AppCompatActivity {
         five.addSubItemData("Candy");
         subItems.add(five);
 
+        ExpandingItemData six = new ExpandingItemData();
+        six.setColorRes(R.color.yellow);
+        six.setIconRes(R.drawable.ic_ghost);
+        six.setExpanded(false);
+        six.setItemData("Ray");
+        six.addSubItemData("Parsecs");
+        six.addSubItemData("Ship");
+        subItems.add(six);
+
+        ExpandingItemData seven = new ExpandingItemData();
+        seven.setColorRes(R.color.blue);
+        seven.setIconRes(R.drawable.ic_ghost);
+        seven.setExpanded(false);
+        seven.setItemData("Finn");
+        seven.addSubItemData("Good guy");
+        subItems.add(seven);
+
         return subItems;
     }
 }

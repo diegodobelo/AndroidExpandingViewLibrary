@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ public class ExpandingItem extends RelativeLayout {
     public static final int DEFAULT_ANIM_DURATION = 600;
 
     private ViewGroup mItemLayout;
-    private ViewGroup mSeparatorLayout;
     private int mSubItemRes;
     private LayoutInflater mInflater;
     private boolean mSubItemsShown;
@@ -40,6 +40,13 @@ public class ExpandingItem extends RelativeLayout {
     private int mAnimationDuration;
     private int mIndicatorMarginLeft;
     private int mIndicatorMarginRight;
+
+    //TODO: make it a list
+    private OnItemStateChanged mListener;
+
+    public interface OnItemStateChanged {
+        void itemCollapseStateChanged(boolean expanded);
+    }
 
     public ExpandingItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -91,6 +98,23 @@ public class ExpandingItem extends RelativeLayout {
         setupIndicatorBackground();
     }
 
+    //TODO: remove if not needed
+    public ExpandingItem(Context context) {
+        super(context);
+    }
+
+    public boolean isExpanded() {
+        return mSubItemsShown;
+    }
+
+    public void setStateChangedListener(OnItemStateChanged listener) {
+        mListener = listener;
+    }
+
+    public int getSubItemsCount() {
+        return mSubItemCount;
+    }
+
     private void setIndicatorBackgroundSize() {
         setViewHeight(mBaseLayout.findViewById(R.id.icon_indicator_top), mIndicatorSize);
         setViewHeight(mBaseLayout.findViewById(R.id.icon_indicator_bottom), mIndicatorSize);
@@ -117,9 +141,6 @@ public class ExpandingItem extends RelativeLayout {
         mIndicatorBackground = mBaseLayout.findViewById(R.id.icon_indicator_middle);
     }
 
-    public ExpandingItem(Context context) {
-        super(context);
-    }
 
     private void addItem(final ViewGroup item) {
         if (item != null) {
@@ -128,7 +149,7 @@ public class ExpandingItem extends RelativeLayout {
                 @Override
                 public void onClick(View v) {
                     toggleSubItems();
-                    expandSubItems();
+                    expandSubItemsWithAnimation();
                     expandIconIndicator();
                     animateSubItemsIn();
                 }
@@ -153,16 +174,11 @@ public class ExpandingItem extends RelativeLayout {
         mIndicatorImage.setImageDrawable(icon);
     }
 
-    public View createSubItem(int index) throws Exception {
-        //TODO: verify if not null
-        if (index > mBaseSubListLayout.getChildCount()) {
-            throw new Exception("Wrong index. There are only "
-                    + mBaseSubListLayout.getChildCount() + " items ");
-        }
-
+    public View createSubItem(int index) {
         if (mBaseSubListLayout.getChildAt(index) != null) {
             return mBaseSubListLayout.getChildAt(index);
         }
+        //TODO: verify if not null
         ViewGroup subItemLayout = (ViewGroup) mInflater.inflate(mSubItemRes, null, false);
         mBaseSubListLayout.addView(subItemLayout);
         mSubItemCount++;
@@ -177,7 +193,15 @@ public class ExpandingItem extends RelativeLayout {
                 setViewHeight(mBaseSubListLayout, 0);
             }
         });
+    }
 
+    public void expandSubItems() {
+        mBaseSubListLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                setViewHeight(mBaseSubListLayout, mSubItemHeight * mSubItemCount);
+            }
+        });
     }
 
     private void animateSubItemsIn() {
@@ -215,6 +239,9 @@ public class ExpandingItem extends RelativeLayout {
 
     private void toggleSubItems() {
         mSubItemsShown = !mSubItemsShown;
+        if (mListener != null) {
+            mListener.itemCollapseStateChanged(mSubItemsShown);
+        }
     }
 
     private void animateViewIn(final ViewGroup viewGroup, int index) {
@@ -270,7 +297,7 @@ public class ExpandingItem extends RelativeLayout {
         }
     }
 
-    private void expandSubItems() {
+    private void expandSubItemsWithAnimation() {
         if (mSubItemCount == 0) {
             return;
         }
