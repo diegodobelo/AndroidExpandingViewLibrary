@@ -26,11 +26,16 @@ public class ExpandingItemViewHolder extends RecyclerView.ViewHolder {
         if (subItems != null) {
             mItem.beginSubItemCreation();
             for (int i = 0; i < subItems.length; i++) {
-                View subItemView = mItem.createSubItem();
-                TextView text = (TextView) subItemView.findViewById(R.id.sub_title);
-                text.setText(subItems[i]);
+                View subItemView = null;
+                try {
+                    subItemView = mItem.createSubItem(i);
+                    TextView text = (TextView) subItemView.findViewById(R.id.sub_title);
+                    text.setText(subItems[i]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-            mItem.endSubItemCreation();
+//            mItem.endSubItemCreation();
         }
         //Test with hexa color
         mItem.setIndicatorColorRes(R.color.colorAccent);

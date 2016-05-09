@@ -152,8 +152,16 @@ public class ExpandingItem extends RelativeLayout {
         mIndicatorImage.setImageDrawable(icon);
     }
 
-    public View createSubItem() {
+    public View createSubItem(int index) throws Exception {
         //TODO: verify if not null
+        if (index > mBaseSubListLayout.getChildCount()) {
+            throw new Exception("Wrong index. There are only "
+                    + mBaseSubListLayout.getChildCount() + " items ");
+        }
+
+        if (mBaseSubListLayout.getChildAt(index) != null) {
+            return mBaseSubListLayout.getChildAt(index);
+        }
         ViewGroup subItemLayout = (ViewGroup) mInflater.inflate(mSubItemRes, null, false);
         mBaseSubListLayout.addView(subItemLayout);
         mSubItemCount++;
@@ -162,7 +170,7 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     public void beginSubItemCreation(){
-        mBaseSubListLayout.removeAllViewsInLayout();
+//        mBaseSubListLayout.removeAllViewsInLayout();
     }
 
     public void endSubItemCreation() {
