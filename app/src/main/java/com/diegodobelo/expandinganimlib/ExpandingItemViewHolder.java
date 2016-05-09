@@ -21,16 +21,15 @@ public class ExpandingItemViewHolder extends RecyclerView.ViewHolder {
         mContext = itemView.getContext();
     }
 
-    public void setData(String title, String[] subItems) {
-        mTitle.setText(title);
-        if (subItems != null) {
-            mItem.beginSubItemCreation();
-            for (int i = 0; i < subItems.length; i++) {
+    public void setData(ExpandingItemData data) {
+        mTitle.setText((String)data.getItemData());
+        if (data.getSubItemData() != null) {
+            for (int i = 0; i < data.getSubItemData().size(); i++) {
                 View subItemView = null;
                 try {
                     subItemView = mItem.createSubItem(i);
                     TextView text = (TextView) subItemView.findViewById(R.id.sub_title);
-                    text.setText(subItems[i]);
+                    text.setText((String) data.getSubItemData().get(i));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -38,7 +37,8 @@ public class ExpandingItemViewHolder extends RecyclerView.ViewHolder {
             mItem.collapseSubItems();
         }
         //Test with hexa color
-        mItem.setIndicatorColorRes(R.color.colorAccent);
-        mItem.setIndicatorIcon(ContextCompat.getDrawable(mContext, R.drawable.ic_ghost));
+        mItem.setIndicatorColorRes(data.getColorRes());
+        //TODO: create method that receives res
+        mItem.setIndicatorIcon(ContextCompat.getDrawable(mContext, data.getIconRes()));
     }
 }

@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,6 +31,7 @@ public class ExpandingItem extends RelativeLayout {
     private LinearLayout mBaseSubListLayout;
     private ImageView mIndicatorImage;
     private View mIndicatorBackground;
+    private ViewStub mSeparatorStub;
     private int mItemHeight;
     private int mSubItemHeight;
     private int mSubItemWidth;
@@ -59,6 +61,8 @@ public class ExpandingItem extends RelativeLayout {
 
         mBaseLayout.findViewById(R.id.icon_container).bringToFront();
 
+        mSeparatorStub = (ViewStub) mBaseLayout.findViewById(R.id.base_separator_stub);
+
         try {
             int itemLayoutId = array.getResourceId(R.styleable.ExpandingItem_item_layout, 0);
             int separatorLayoutId = array.getResourceId(R.styleable.ExpandingItem_separator_layout, 0);
@@ -70,7 +74,8 @@ public class ExpandingItem extends RelativeLayout {
                 mItemLayout = (ViewGroup) mInflater.inflate(itemLayoutId, null, false);
             }
             if (separatorLayoutId != 0) {
-                mSeparatorLayout = (ViewGroup) mInflater.inflate(separatorLayoutId, null, false);
+                mSeparatorStub.setLayoutResource(separatorLayoutId);
+                mSeparatorStub.inflate();
             }
         } finally {
             array.recycle();
@@ -82,10 +87,6 @@ public class ExpandingItem extends RelativeLayout {
 
         addItem(mItemLayout);
         addView(mBaseLayout);
-
-        if (mSeparatorLayout != null) {
-            addView(mSeparatorLayout);
-        }
 
         setupIndicatorBackground();
     }
@@ -167,10 +168,6 @@ public class ExpandingItem extends RelativeLayout {
         mSubItemCount++;
         setSubItemDimensions(subItemLayout);
         return subItemLayout;
-    }
-
-    public void beginSubItemCreation(){
-//        mBaseSubListLayout.removeAllViewsInLayout();
     }
 
     public void collapseSubItems() {
@@ -260,7 +257,7 @@ public class ExpandingItem extends RelativeLayout {
         if (mIndicatorBackground != null) {
             ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
             animation.setDuration(mAnimationDuration);
-            final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize + mItemHeight;
+            final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize + mItemHeight/2;
             animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
