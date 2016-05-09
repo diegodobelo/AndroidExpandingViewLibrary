@@ -173,7 +173,7 @@ public class ExpandingItem extends RelativeLayout {
 //        mBaseSubListLayout.removeAllViewsInLayout();
     }
 
-    public void endSubItemCreation() {
+    public void collapseSubItems() {
         mBaseSubListLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -186,6 +186,7 @@ public class ExpandingItem extends RelativeLayout {
     private void animateSubItemsIn() {
         for (int i = 0; i < mSubItemCount; i++) {
             animateViewIn((ViewGroup) mBaseSubListLayout.getChildAt(i), i);
+            animateViewAlpha((ViewGroup) mBaseSubListLayout.getChildAt(i), i);
         }
     }
 
@@ -230,7 +231,6 @@ public class ExpandingItem extends RelativeLayout {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float val = (float) animation.getAnimatedValue();
-                viewGroup.setAlpha(val);
                 viewGroup.setX((mSubItemWidth * val) - mSubItemWidth);
             }
         });
@@ -238,7 +238,25 @@ public class ExpandingItem extends RelativeLayout {
         animation.start();
     }
 
+    private void animateViewAlpha(final ViewGroup viewGroup, int index) {
+        ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
+        animation.setDuration(mSubItemsShown ? mAnimationDuration * 2 : mAnimationDuration);
+
+        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float val = (float) animation.getAnimatedValue();
+                viewGroup.setAlpha(val);
+            }
+        });
+
+        animation.start();
+    }
+
     private void expandIconIndicator() {
+        if (mSubItemCount == 0) {
+            return;
+        }
         if (mIndicatorBackground != null) {
             ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
             animation.setDuration(mAnimationDuration);
@@ -256,6 +274,9 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     private void expandSubItems() {
+        if (mSubItemCount == 0) {
+            return;
+        }
         if (mBaseSubListLayout != null) {
             ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
             animation.setDuration(mAnimationDuration);

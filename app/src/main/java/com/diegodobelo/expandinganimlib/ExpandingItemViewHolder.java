@@ -35,7 +35,7 @@ public class ExpandingItemViewHolder extends RecyclerView.ViewHolder {
                     e.printStackTrace();
                 }
             }
-//            mItem.endSubItemCreation();
+            mItem.collapseSubItems();
         }
         //Test with hexa color
         mItem.setIndicatorColorRes(R.color.colorAccent);
