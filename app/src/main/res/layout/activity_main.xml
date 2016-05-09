@@ -6,8 +6,12 @@
     tools:context="com.diegodobelo.expandinganimlib.MainActivity"
     android:background="@color/colorBackground">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_main"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+        <com.diegodobelo.expandinganimlib.ExpandingList
+            android:id="@+id/expanding_list_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </ScrollView>
 </RelativeLayout>

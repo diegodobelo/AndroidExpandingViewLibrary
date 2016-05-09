@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -168,6 +167,10 @@ public class ExpandingItem extends RelativeLayout {
         findViewById(R.id.icon_indicator_bottom).getBackground().setColorFilter(color,
                 PorterDuff.Mode.SRC_ATOP);
         findViewById(R.id.icon_indicator_middle).setBackgroundColor(color);
+    }
+
+    public void setIndicatorIconRes(int res) {
+        setIndicatorIcon(ContextCompat.getDrawable(getContext(), res));
     }
 
     public void setIndicatorIcon(Drawable icon) {
