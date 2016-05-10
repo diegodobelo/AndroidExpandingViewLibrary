@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -31,7 +32,6 @@ public class ExpandingItem extends RelativeLayout {
     private ViewStub mSeparatorStub;
     private ViewGroup mIndicatorContainer;
 
-    //TODO: why it is a member var?
     private int mSubItemRes;
 
     private int mItemHeight;
@@ -198,7 +198,12 @@ public class ExpandingItem extends RelativeLayout {
         mIndicatorImage.setImageDrawable(icon);
     }
 
+    @Nullable
     public View createSubItem(int index) {
+        if (mSubItemRes == 0) {
+            throw new RuntimeException("There is no layout to be inflated. " +
+                    "Please set sub_item_layout value");
+        }
         if (mBaseSubListLayout.getChildAt(index) != null) {
             return mBaseSubListLayout.getChildAt(index);
         }
@@ -230,7 +235,7 @@ public class ExpandingItem extends RelativeLayout {
 
     private void animateSubItemsIn() {
         for (int i = 0; i < mSubItemCount; i++) {
-            animateViewIn((ViewGroup) mBaseSubListLayout.getChildAt(i), i);
+            animateSubViews((ViewGroup) mBaseSubListLayout.getChildAt(i), i);
             animateViewAlpha((ViewGroup) mBaseSubListLayout.getChildAt(i), i);
         }
     }
@@ -268,7 +273,7 @@ public class ExpandingItem extends RelativeLayout {
         }
     }
 
-    private void animateViewIn(final ViewGroup viewGroup, int index) {
+    private void animateSubViews(final ViewGroup viewGroup, int index) {
         ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
         animation.setDuration(mAnimationDuration);
         int delay = index * mAnimationDuration / mSubItemCount;
@@ -279,7 +284,7 @@ public class ExpandingItem extends RelativeLayout {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float val = (float) animation.getAnimatedValue();
-                viewGroup.setX((mSubItemWidth * val) - mSubItemWidth);
+                viewGroup.setX((mSubItemWidth/2 * val) - mSubItemWidth/2);
             }
         });
 
@@ -289,6 +294,8 @@ public class ExpandingItem extends RelativeLayout {
     private void animateViewAlpha(final ViewGroup viewGroup, int index) {
         ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
         animation.setDuration(mSubItemsShown ? mAnimationDuration * 2 : mAnimationDuration);
+        int delay = index * mAnimationDuration / mSubItemCount;
+        animation.setStartDelay(mSubItemsShown ? delay/2 : 0);
 
         animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override

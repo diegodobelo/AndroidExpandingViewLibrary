@@ -28,7 +28,7 @@ public class ExpandingList extends LinearLayout {
         addView(item);
     }
 
-    public ExpandingItem createNewItem(int layoutId) throws Exception {
+    public ExpandingItem createNewItem(int layoutId) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         ViewGroup item = (ViewGroup) inflater.inflate(layoutId, null, false);
         if (item instanceof ExpandingItem) {
@@ -36,6 +36,6 @@ public class ExpandingList extends LinearLayout {
             addItem(expandingItem);
             return expandingItem;
         }
-        throw new Exception("The layout id not an instance of com.diegodobelo.expandinganimlib.ExpandingItem");
+        throw new RuntimeException("The layout id not an instance of com.diegodobelo.expandinganimlib.ExpandingItem");
     }
 }
