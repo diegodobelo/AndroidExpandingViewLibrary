@@ -12,7 +12,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
             android:textColor="@color/white"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:alpha="0.6"/>
     </RelativeLayout>
 
 </RelativeLayout>

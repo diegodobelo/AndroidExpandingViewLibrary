@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
 
         ExpandingItem two = mExpandingList.createNewItem(R.layout.expanding_layout);
         if (two != null) {
-//        two.setIndicatorColorRes(R.color.blue);
+        two.setIndicatorColorRes(R.color.blue);
             two.setIndicatorIconRes(R.drawable.ic_ghost);
-//        ((TextView) two.findViewById(R.id.title)).setText("Mary");
+        ((TextView) two.findViewById(R.id.title)).setText("Mary");
             String[] twoSub = {"Cat", "Mouse"};
             for (int i = 0; i < twoSub.length; i++) {
                 //TODO: index not needed anymore?
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         ExpandingItem four = mExpandingList.createNewItem(R.layout.expanding_layout);
         if (four != null) {
-            four.setIndicatorColorRes(android.R.color.transparent);
+            four.setIndicatorColorRes(R.color.orange);
             four.setIndicatorIconRes(R.drawable.ic_ghost);
             ((TextView) four.findViewById(R.id.title)).setText("Paul");
             String[] fourSub = {"Dog", "Horse", "Boat"};

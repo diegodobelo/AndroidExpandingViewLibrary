@@ -1,5 +1,7 @@
 package com.diegodobelo.expandinganimlib;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -274,6 +276,7 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     private void animateSubViews(final ViewGroup viewGroup, int index) {
+        viewGroup.setLayerType(ViewGroup.LAYER_TYPE_HARDWARE, null);
         ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
         animation.setDuration(mAnimationDuration);
         int delay = index * mAnimationDuration / mSubItemCount;
@@ -285,6 +288,13 @@ public class ExpandingItem extends RelativeLayout {
             public void onAnimationUpdate(ValueAnimator animation) {
                 float val = (float) animation.getAnimatedValue();
                 viewGroup.setX((mSubItemWidth/2 * val) - mSubItemWidth/2);
+            }
+        });
+
+        animation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                viewGroup.setLayerType(ViewGroup.LAYER_TYPE_NONE, null);
             }
         });
 
