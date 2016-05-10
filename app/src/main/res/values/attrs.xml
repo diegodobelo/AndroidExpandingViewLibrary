@@ -7,5 +7,7 @@
         <attr name="indicator_size" format="dimension"/>
         <attr name="indicator_margin_left" format="dimension"/>
         <attr name="indicator_margin_right" format="dimension"/>
+        <attr name="show_indicator" format="boolean"/>
+        <attr name="show_animation" format="boolean"/>
     </declare-styleable>
 </resources>

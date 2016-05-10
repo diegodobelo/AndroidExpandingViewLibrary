@@ -2,14 +2,8 @@ package com.diegodobelo.expandinganimlib;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ExpandingList mExpandingList;
@@ -40,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         one.collapseSubItems();
 
         ExpandingItem two = mExpandingList.createNewItem(R.layout.expanding_layout);
-        two.setIndicatorColorRes(R.color.blue);
+//        two.setIndicatorColorRes(R.color.blue);
         two.setIndicatorIconRes(R.drawable.ic_ghost);
         ((TextView) two.findViewById(R.id.title)).setText("Mary");
         String[] twoSub = {"Cat", "Mouse"};
@@ -64,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         three.collapseSubItems();
 
         ExpandingItem four = mExpandingList.createNewItem(R.layout.expanding_layout);
-        four.setIndicatorColorRes(R.color.yellow);
+        four.setIndicatorColorRes(android.R.color.transparent);
         four.setIndicatorIconRes(R.drawable.ic_ghost);
         ((TextView) four.findViewById(R.id.title)).setText("Paul");
         String[] fourSub = {"Dog", "Horse", "Boat"};

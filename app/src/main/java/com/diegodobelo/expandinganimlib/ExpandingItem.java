@@ -3,8 +3,8 @@ package com.diegodobelo.expandinganimlib;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -22,15 +22,18 @@ public class ExpandingItem extends RelativeLayout {
     public static final int DEFAULT_ANIM_DURATION = 600;
 
     private ViewGroup mItemLayout;
-    private int mSubItemRes;
     private LayoutInflater mInflater;
-    private boolean mSubItemsShown;
     private RelativeLayout mBaseLayout;
     private LinearLayout mBaseListLayout;
     private LinearLayout mBaseSubListLayout;
     private ImageView mIndicatorImage;
     private View mIndicatorBackground;
     private ViewStub mSeparatorStub;
+    private ViewGroup mIndicatorContainer;
+
+    //TODO: why it is a member var?
+    private int mSubItemRes;
+
     private int mItemHeight;
     private int mSubItemHeight;
     private int mSubItemWidth;
@@ -39,6 +42,10 @@ public class ExpandingItem extends RelativeLayout {
     private int mAnimationDuration;
     private int mIndicatorMarginLeft;
     private int mIndicatorMarginRight;
+
+    private boolean mShowIndicator;
+    private boolean mShowAnimation;
+    private boolean mSubItemsShown;
 
     //TODO: make it a list
     private OnItemStateChanged mListener;
@@ -69,6 +76,14 @@ public class ExpandingItem extends RelativeLayout {
 
         mSeparatorStub = (ViewStub) mBaseLayout.findViewById(R.id.base_separator_stub);
 
+        mIndicatorContainer = (ViewGroup) mBaseLayout.findViewById(R.id.indicator_container);
+        mIndicatorContainer.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expand();
+            }
+        });
+
         try {
             int itemLayoutId = array.getResourceId(R.styleable.ExpandingItem_item_layout, 0);
             int separatorLayoutId = array.getResourceId(R.styleable.ExpandingItem_separator_layout, 0);
@@ -76,6 +91,8 @@ public class ExpandingItem extends RelativeLayout {
             mIndicatorSize = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_size, 0);
             mIndicatorMarginLeft = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_margin_left, 0);
             mIndicatorMarginRight = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_margin_right, 0);
+            mShowIndicator = array.getBoolean(R.styleable.ExpandingItem_show_indicator, true);
+            mShowAnimation = array.getBoolean(R.styleable.ExpandingItem_show_animation, true);
             if (itemLayoutId != 0) {
                 mItemLayout = (ViewGroup) mInflater.inflate(itemLayoutId, null, false);
             }
@@ -90,6 +107,8 @@ public class ExpandingItem extends RelativeLayout {
         if (mIndicatorSize != 0) {
             setIndicatorBackgroundSize();
         }
+
+        mIndicatorContainer.setVisibility(mShowIndicator && mIndicatorSize != 0 ? VISIBLE : GONE);
 
         addItem(mItemLayout);
         addView(mBaseLayout);
@@ -126,7 +145,7 @@ public class ExpandingItem extends RelativeLayout {
         mItemLayout.post(new Runnable() {
             @Override
             public void run() {
-                setViewMargin(mBaseLayout.findViewById(R.id.indicator_container),
+                setViewMargin(mIndicatorContainer,
                         mIndicatorMarginLeft, mItemLayout.getMeasuredHeight()/2 - mIndicatorSize/2, mIndicatorMarginRight, 0);
             }
         });
@@ -147,14 +166,18 @@ public class ExpandingItem extends RelativeLayout {
             item.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    toggleSubItems();
-                    expandSubItemsWithAnimation();
-                    expandIconIndicator();
-                    animateSubItemsIn();
+                    expand();
                 }
             });
             setItemHeight(item);
         }
+    }
+
+    private void expand() {
+        toggleSubItems();
+        expandSubItemsWithAnimation();
+        expandIconIndicator();
+        animateSubItemsIn();
     }
 
     public void setIndicatorColorRes(int colorRes) {
@@ -162,10 +185,8 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     public void setIndicatorColor(int color) {
-        findViewById(R.id.icon_indicator_top).getBackground().setColorFilter(color,
-                PorterDuff.Mode.SRC_ATOP);
-        findViewById(R.id.icon_indicator_bottom).getBackground().setColorFilter(color,
-                PorterDuff.Mode.SRC_ATOP);
+        ((GradientDrawable)findViewById(R.id.icon_indicator_top).getBackground().mutate()).setColor(color);
+        ((GradientDrawable)findViewById(R.id.icon_indicator_bottom).getBackground().mutate()).setColor(color);
         findViewById(R.id.icon_indicator_middle).setBackgroundColor(color);
     }
 
