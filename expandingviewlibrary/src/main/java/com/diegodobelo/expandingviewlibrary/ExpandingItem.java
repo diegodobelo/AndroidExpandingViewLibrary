@@ -1,4 +1,4 @@
-package com.diegodobelo.expandinganimlib;
+package com.diegodobelo.expandingviewlibrary;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -325,7 +325,7 @@ public class ExpandingItem extends RelativeLayout {
         if (mIndicatorBackground != null) {
             ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
             animation.setDuration(mAnimationDuration);
-            final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize + mItemHeight/2;
+            final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize/2 + mItemHeight/2;
             animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -376,7 +376,7 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     private void setViewMargin(View v, int left, int top, int right, int bottom) {
-        final ViewGroup.MarginLayoutParams params = (MarginLayoutParams) v.getLayoutParams();
+        final MarginLayoutParams params = (MarginLayoutParams) v.getLayoutParams();
         params.setMargins(left, top, right, bottom);
         v.requestLayout();
     }

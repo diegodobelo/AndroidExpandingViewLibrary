@@ -1,4 +1,4 @@
-package com.diegodobelo.expandinganimlib;
+package com.diegodobelo.expandingviewlibrary;
 
 import android.content.Context;
 import android.util.AttributeSet;

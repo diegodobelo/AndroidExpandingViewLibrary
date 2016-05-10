@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.diegodobelo.expandingviewlibrary.ExpandingItem;
+import com.diegodobelo.expandingviewlibrary.ExpandingList;
+
 public class MainActivity extends AppCompatActivity {
     private ExpandingList mExpandingList;
 
