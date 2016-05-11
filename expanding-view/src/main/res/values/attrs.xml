@@ -21,5 +21,6 @@
         <attr name="indicator_margin_right" format="dimension"/>
         <attr name="show_indicator" format="boolean"/>
         <attr name="show_animation" format="boolean"/>
+        <attr name="animation_duration" format="integer"/>
     </declare-styleable>
 </resources>

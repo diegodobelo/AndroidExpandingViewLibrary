@@ -34,7 +34,7 @@ import android.widget.RelativeLayout;
  * Created by diego on 5/5/16.
  */
 public class ExpandingItem extends RelativeLayout {
-    public static final int DEFAULT_ANIM_DURATION = 600;
+    private static final int DEFAULT_ANIM_DURATION = 300;
 
     private ViewGroup mItemLayout;
     private LayoutInflater mInflater;
@@ -75,8 +75,6 @@ public class ExpandingItem extends RelativeLayout {
     public ExpandingItem(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        mAnimationDuration = DEFAULT_ANIM_DURATION;
-
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.ExpandingItem, 0, 0);
         mInflater = LayoutInflater.from(context);
@@ -107,6 +105,7 @@ public class ExpandingItem extends RelativeLayout {
             mIndicatorMarginRight = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_margin_right, 0);
             mShowIndicator = array.getBoolean(R.styleable.ExpandingItem_show_indicator, true);
             mShowAnimation = array.getBoolean(R.styleable.ExpandingItem_show_animation, true);
+            mAnimationDuration = array.getInt(R.styleable.ExpandingItem_animation_duration, DEFAULT_ANIM_DURATION);
             if (itemLayoutId != 0) {
                 mItemLayout = (ViewGroup) mInflater.inflate(itemLayoutId, null, false);
             }
@@ -128,11 +127,6 @@ public class ExpandingItem extends RelativeLayout {
         addView(mBaseLayout);
 
         setupIndicatorBackground();
-    }
-
-    //TODO: remove if not needed
-    public ExpandingItem(Context context) {
-        super(context);
     }
 
     public boolean isExpanded() {

@@ -1,1 +1,1 @@
-include ':app', ':expandingviewlibrary'
+include ':app', ':expanding-view'
