@@ -63,6 +63,7 @@ public class ExpandingItem extends RelativeLayout {
 
     //TODO: make it a list
     private OnItemStateChanged mListener;
+    private int mCurrentSubItemsHeight;
 
     public interface OnItemStateChanged {
         void itemCollapseStateChanged(boolean expanded);
@@ -92,7 +93,9 @@ public class ExpandingItem extends RelativeLayout {
         mIndicatorContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                expand();
+                if (mSubItemCount != 0) {
+                    expand();
+                }
             }
         });
 
@@ -125,6 +128,10 @@ public class ExpandingItem extends RelativeLayout {
 
         addItem(mItemLayout);
         addView(mBaseLayout);
+
+        if (!mShowAnimation) {
+            mAnimationDuration = 0;
+        }
 
         setupIndicatorBackground();
     }
@@ -174,7 +181,9 @@ public class ExpandingItem extends RelativeLayout {
             item.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    expand();
+                    if (mSubItemCount != 0) {
+                        expand();
+                    }
                 }
             });
             setItemHeight(item);
@@ -183,8 +192,8 @@ public class ExpandingItem extends RelativeLayout {
 
     private void expand() {
         toggleSubItems();
-        expandSubItemsWithAnimation();
-        expandIconIndicator();
+        expandSubItemsWithAnimation(0f);
+        expandIconIndicator(0f);
         animateSubItemsIn();
     }
 
@@ -223,20 +232,48 @@ public class ExpandingItem extends RelativeLayout {
         return subItemLayout;
     }
 
+    public void createSubItems(int count) {
+        if (mSubItemRes == 0) {
+            throw new RuntimeException("There is no layout to be inflated. " +
+                    "Please set sub_item_layout value");
+        }
+        for (int i = 0; i < count; i++) {
+            createSubItem(i);
+        }
+    }
+
+    public View getSubItemView(int position) {
+        if (mBaseSubListLayout.getChildAt(position) != null) {
+            return mBaseSubListLayout.getChildAt(position);
+        }
+        throw new RuntimeException("There is no sub item for position " + position +
+                ". There are only " + mBaseSubListLayout.getChildCount() + " in the list.");
+    }
+
+    public boolean removeSubItemAt(int position) {
+        return removeSubItem(mBaseSubListLayout.getChildAt(position));
+    }
+
+    public boolean removeSubItem(View view) {
+        if (view != null) {
+            mBaseSubListLayout.removeView(view);
+            mSubItemCount--;
+            expandSubItemsWithAnimation(mSubItemHeight * (mSubItemCount + 1));
+            if (mSubItemCount == 0) {
+                mCurrentSubItemsHeight = 0;
+                mSubItemsShown = false;
+            }
+            expandIconIndicator(mCurrentSubItemsHeight);
+            return true;
+        }
+        return false;
+    }
+
     public void collapseSubItems() {
         mBaseSubListLayout.post(new Runnable() {
             @Override
             public void run() {
                 setViewHeight(mBaseSubListLayout, 0);
-            }
-        });
-    }
-
-    public void expandSubItems() {
-        mBaseSubListLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                setViewHeight(mBaseSubListLayout, mSubItemHeight * mSubItemCount);
             }
         });
     }
@@ -260,7 +297,6 @@ public class ExpandingItem extends RelativeLayout {
                 }
             }
         });
-
     }
 
     private void setItemHeight(final ViewGroup v) {
@@ -324,19 +360,19 @@ public class ExpandingItem extends RelativeLayout {
         animation.start();
     }
 
-    private void expandIconIndicator() {
-        if (mSubItemCount == 0) {
-            return;
-        }
+    private void expandIconIndicator(float startingPos) {
         if (mIndicatorBackground != null) {
-            ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
-            animation.setDuration(mAnimationDuration);
             final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize/2 + mItemHeight/2;
+            mCurrentSubItemsHeight = totalHeight;
+            ValueAnimator animation = mSubItemsShown ?
+                    ValueAnimator.ofFloat(startingPos, totalHeight) :
+                    ValueAnimator.ofFloat(totalHeight, startingPos);
+            animation.setDuration(mAnimationDuration);
             animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float val = (float) animation.getAnimatedValue();
-                    setViewHeight(mIndicatorBackground, (int) (totalHeight * val));
+                    setViewHeight(mIndicatorBackground, (int) val);
                 }
             });
 
@@ -344,20 +380,19 @@ public class ExpandingItem extends RelativeLayout {
         }
     }
 
-    private void expandSubItemsWithAnimation() {
-        if (mSubItemCount == 0) {
-            return;
-        }
+    private void expandSubItemsWithAnimation(float startingPos) {
         if (mBaseSubListLayout != null) {
-            ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
+            final int totalHeight = (mSubItemHeight * mSubItemCount);
+            ValueAnimator animation = mSubItemsShown ?
+                    ValueAnimator.ofFloat(startingPos, totalHeight) :
+                    ValueAnimator.ofFloat(totalHeight, startingPos);
             animation.setDuration(mAnimationDuration);
 
-            final int totalHeight = (mSubItemHeight * mSubItemCount);
             animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float val = (float) animation.getAnimatedValue();
-                    setViewHeight(mBaseSubListLayout, (int) (totalHeight * val));
+                    setViewHeight(mBaseSubListLayout, (int) val);
                 }
             });
 

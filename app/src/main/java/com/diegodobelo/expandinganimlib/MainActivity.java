@@ -32,15 +32,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createSubItems() {
-        ExpandingItem one = mExpandingList.createNewItem(R.layout.expanding_layout);
+        final ExpandingItem one = mExpandingList.createNewItem(R.layout.expanding_layout);
         if (one != null) {
             one.setIndicatorColorRes(R.color.pink);
             one.setIndicatorIconRes(R.drawable.ic_ghost);
             ((TextView) one.findViewById(R.id.title)).setText("John");
             String[] oneSub = {"House", "Boat", "Candy", "Collection", "Sport", "Ball", "Head"};
+            one.createSubItems(oneSub.length);
             for (int i = 0; i < oneSub.length; i++) {
                 //TODO: index not needed anymore?
-                View view = one.createSubItem(i);
+                View view = one.getSubItemView(i);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        one.removeSubItem(v);
+                    }
+                });
                 ((TextView) view.findViewById(R.id.sub_title)).setText(oneSub[i]);
             }
             one.collapseSubItems();

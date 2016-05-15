@@ -22,4 +22,5 @@
     app:indicator_size="42dp"
     app:indicator_margin_left="16dp"
     app:indicator_margin_right="16dp"
-    app:show_indicator="true"/>
+    app:show_indicator="true"
+    app:show_animation="true"/>
