@@ -61,6 +61,9 @@ public class ExpandingItem extends RelativeLayout {
     private boolean mShowAnimation;
     private boolean mSubItemsShown;
 
+    private int mItemLayoutId;
+    private int mSeparatorLayoutId;
+
     //TODO: make it a list
     private OnItemStateChanged mListener;
     private int mCurrentSubItemsHeight;
@@ -76,19 +79,52 @@ public class ExpandingItem extends RelativeLayout {
     public ExpandingItem(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        readAttributes(context, attrs);
+        inflateLayouts(context);
+
+        setupIndicator();
+
+        addItem(mItemLayout);
+        addView(mBaseLayout);
+    }
+
+    private void setupIndicator() {
+        if (mIndicatorSize != 0) {
+            setIndicatorBackgroundSize();
+        }
+
+        mIndicatorContainer.setVisibility(mShowIndicator && mIndicatorSize != 0 ? VISIBLE : GONE);
+    }
+
+    private void readAttributes(Context context, AttributeSet attrs) {
         TypedArray array = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.ExpandingItem, 0, 0);
+
+        try {
+            mItemLayoutId = array.getResourceId(R.styleable.ExpandingItem_item_layout, 0);
+            mSeparatorLayoutId = array.getResourceId(R.styleable.ExpandingItem_separator_layout, 0);
+            mSubItemRes = array.getResourceId(R.styleable.ExpandingItem_sub_item_layout, 0);
+            mIndicatorSize = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_size, 0);
+            mIndicatorMarginLeft = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_margin_left, 0);
+            mIndicatorMarginRight = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_margin_right, 0);
+            mShowIndicator = array.getBoolean(R.styleable.ExpandingItem_show_indicator, true);
+            mShowAnimation = array.getBoolean(R.styleable.ExpandingItem_show_animation, true);
+            mAnimationDuration = array.getInt(R.styleable.ExpandingItem_animation_duration, DEFAULT_ANIM_DURATION);
+        } finally {
+            array.recycle();
+        }
+    }
+
+    private void inflateLayouts(Context context) {
         mInflater = LayoutInflater.from(context);
         mBaseLayout = (RelativeLayout) mInflater.inflate(R.layout.expanding_item_base_layout,
                 null, false);
         mBaseListLayout = (LinearLayout) mBaseLayout.findViewById(R.id.base_list_layout);
         mBaseSubListLayout = (LinearLayout) mBaseLayout.findViewById(R.id.base_sub_list_layout);
         mIndicatorImage = (ImageView) mBaseLayout.findViewById(R.id.indicator_image);
-
         mBaseLayout.findViewById(R.id.icon_container).bringToFront();
-
         mSeparatorStub = (ViewStub) mBaseLayout.findViewById(R.id.base_separator_stub);
-
+        mIndicatorBackground = mBaseLayout.findViewById(R.id.icon_indicator_middle);
         mIndicatorContainer = (ViewGroup) mBaseLayout.findViewById(R.id.indicator_container);
         mIndicatorContainer.setOnClickListener(new OnClickListener() {
             @Override
@@ -99,41 +135,17 @@ public class ExpandingItem extends RelativeLayout {
             }
         });
 
-        try {
-            int itemLayoutId = array.getResourceId(R.styleable.ExpandingItem_item_layout, 0);
-            int separatorLayoutId = array.getResourceId(R.styleable.ExpandingItem_separator_layout, 0);
-            mSubItemRes = array.getResourceId(R.styleable.ExpandingItem_sub_item_layout, 0);
-            mIndicatorSize = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_size, 0);
-            mIndicatorMarginLeft = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_margin_left, 0);
-            mIndicatorMarginRight = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_margin_right, 0);
-            mShowIndicator = array.getBoolean(R.styleable.ExpandingItem_show_indicator, true);
-            mShowAnimation = array.getBoolean(R.styleable.ExpandingItem_show_animation, true);
-            mAnimationDuration = array.getInt(R.styleable.ExpandingItem_animation_duration, DEFAULT_ANIM_DURATION);
-            if (itemLayoutId != 0) {
-                mItemLayout = (ViewGroup) mInflater.inflate(itemLayoutId, null, false);
-            }
-            if (separatorLayoutId != 0) {
-                mSeparatorStub.setLayoutResource(separatorLayoutId);
-                mSeparatorStub.inflate();
-            }
-        } finally {
-            array.recycle();
+        if (mItemLayoutId != 0) {
+            mItemLayout = (ViewGroup) mInflater.inflate(mItemLayoutId, null, false);
         }
-
-        if (mIndicatorSize != 0) {
-            setIndicatorBackgroundSize();
+        if (mSeparatorLayoutId != 0) {
+            mSeparatorStub.setLayoutResource(mSeparatorLayoutId);
+            mSeparatorStub.inflate();
         }
-
-        mIndicatorContainer.setVisibility(mShowIndicator && mIndicatorSize != 0 ? VISIBLE : GONE);
-
-        addItem(mItemLayout);
-        addView(mBaseLayout);
 
         if (!mShowAnimation) {
             mAnimationDuration = 0;
         }
-
-        setupIndicatorBackground();
     }
 
     public boolean isExpanded() {
@@ -169,11 +181,6 @@ public class ExpandingItem extends RelativeLayout {
         setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_bottom), (-1 * mIndicatorSize/2));
 
     }
-
-    private void setupIndicatorBackground() {
-        mIndicatorBackground = mBaseLayout.findViewById(R.id.icon_indicator_middle);
-    }
-
 
     private void addItem(final ViewGroup item) {
         if (item != null) {
