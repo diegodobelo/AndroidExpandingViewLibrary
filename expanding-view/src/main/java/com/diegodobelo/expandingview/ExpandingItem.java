@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -131,9 +132,7 @@ public class ExpandingItem extends RelativeLayout {
         mIndicatorContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSubItemCount != 0) {
-                    expand();
-                }
+                expand();
             }
         });
 
@@ -178,9 +177,7 @@ public class ExpandingItem extends RelativeLayout {
             item.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mSubItemCount != 0) {
-                        expand();
-                    }
+                    expand();
                 }
             });
             item.post(new Runnable() {
@@ -214,6 +211,9 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     public void expand() {
+        if (mSubItemCount == 0) {
+            return;
+        }
         toggleSubItems();
         expandSubItemsWithAnimation(0f);
         expandIconIndicator(0f);
@@ -273,11 +273,11 @@ public class ExpandingItem extends RelativeLayout {
                 ". There are only " + mBaseSubListLayout.getChildCount() + " in the list.");
     }
 
-    public boolean removeSubItemAt(int position) {
-        return removeSubItem(mBaseSubListLayout.getChildAt(position));
+    public void removeSubItemAt(int position) {
+        removeSubItem(mBaseSubListLayout.getChildAt(position));
     }
 
-    public boolean removeSubItem(View view) {
+    public void removeSubItem(View view) {
         if (view != null) {
             mBaseSubListLayout.removeView(view);
             mSubItemCount--;
@@ -287,9 +287,15 @@ public class ExpandingItem extends RelativeLayout {
                 mSubItemsShown = false;
             }
             expandIconIndicator(mCurrentSubItemsHeight);
-            return true;
         }
-        return false;
+    }
+
+    public void removeSubItem(View view, boolean animate) {
+        if (animate) {
+            removeSubItemWithAnimation(view);
+        } else {
+            removeSubItem(view);
+        }
     }
 
     private void setSubItemDimensions(final ViewGroup v) {
@@ -299,7 +305,6 @@ public class ExpandingItem extends RelativeLayout {
                 if (mSubItemHeight <= 0) {
                     mSubItemHeight = v.getMeasuredHeight();
                     mSubItemWidth = v.getMeasuredWidth();
-
                 }
             }
         });
@@ -321,7 +326,9 @@ public class ExpandingItem extends RelativeLayout {
 
     private void animateSubViews(final ViewGroup viewGroup, int index) {
         viewGroup.setLayerType(ViewGroup.LAYER_TYPE_HARDWARE, null);
-        ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
+        ValueAnimator animation = mSubItemsShown ?
+                ValueAnimator.ofFloat(0f, 1f) :
+                ValueAnimator.ofFloat(1f, 0f);
         animation.setDuration(mAnimationDuration);
         int delay = index * mAnimationDuration / mSubItemCount;
         int invertedDelay = (mSubItemCount - index) * mAnimationDuration / mSubItemCount;
@@ -346,7 +353,9 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     private void animateViewAlpha(final ViewGroup viewGroup, int index) {
-        ValueAnimator animation = mSubItemsShown ? ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
+        ValueAnimator animation = mSubItemsShown ?
+                ValueAnimator.ofFloat(0f, 1f) :
+                ValueAnimator.ofFloat(1f, 0f);
         animation.setDuration(mSubItemsShown ? mAnimationDuration * 2 : mAnimationDuration);
         int delay = index * mAnimationDuration / mSubItemCount;
         animation.setStartDelay(mSubItemsShown ? delay/2 : 0);
@@ -369,6 +378,7 @@ public class ExpandingItem extends RelativeLayout {
             ValueAnimator animation = mSubItemsShown ?
                     ValueAnimator.ofFloat(startingPos, totalHeight) :
                     ValueAnimator.ofFloat(totalHeight, startingPos);
+            animation.setInterpolator(new AccelerateDecelerateInterpolator());
             animation.setDuration(mAnimationDuration);
             animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
@@ -388,6 +398,7 @@ public class ExpandingItem extends RelativeLayout {
             ValueAnimator animation = mSubItemsShown ?
                     ValueAnimator.ofFloat(startingPos, totalHeight) :
                     ValueAnimator.ofFloat(totalHeight, startingPos);
+            animation.setInterpolator(new AccelerateDecelerateInterpolator());
             animation.setDuration(mAnimationDuration);
 
             animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -400,6 +411,44 @@ public class ExpandingItem extends RelativeLayout {
 
             animation.start();
         }
+    }
+
+    private void removeSubItemWithAnimation(final View subItem) {
+        ValueAnimator alphaAnimation =
+                ValueAnimator.ofFloat(1f, 0f);
+        alphaAnimation.setDuration(mAnimationDuration/2);
+
+        ValueAnimator heightAnimation =
+                ValueAnimator.ofFloat(mSubItemHeight, 0f);
+        heightAnimation.setDuration(mAnimationDuration/2);
+        heightAnimation.setStartDelay(mAnimationDuration/2);
+
+        alphaAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float val = (float) animation.getAnimatedValue();
+                subItem.setAlpha(val);
+            }
+        });
+
+        heightAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float val = (float) animation.getAnimatedValue();
+                CustomViewUtils.setViewHeight(subItem, (int) val);
+            }
+        });
+
+        alphaAnimation.start();
+        heightAnimation.start();
+
+        heightAnimation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                removeSubItem(subItem);
+            }
+        });
     }
 
 }

@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        one.removeSubItem(v);
+                        one.removeSubItem(v, true);
                     }
                 });
                 ((TextView) view.findViewById(R.id.sub_title)).setText(oneSub[i]);
