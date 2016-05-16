@@ -17,8 +17,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.diegodobelo.expandingviewlibrary.ExpandingItem;
-import com.diegodobelo.expandingviewlibrary.ExpandingList;
+import com.diegodobelo.expandingview.ExpandingItem;
+import com.diegodobelo.expandingview.ExpandingList;
 
 public class MainActivity extends AppCompatActivity {
     private ExpandingList mExpandingList;
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 ((TextView) view.findViewById(R.id.sub_title)).setText(oneSub[i]);
             }
-            one.collapseSubItems();
+            one.collapse();
         }
 
         ExpandingItem two = mExpandingList.createNewItem(R.layout.expanding_layout);
@@ -63,8 +63,14 @@ public class MainActivity extends AppCompatActivity {
                 //TODO: index not needed anymore?
                 View view = two.createSubItem(i);
                 ((TextView) view.findViewById(R.id.sub_title)).setText(twoSub[i]);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        one.expand();
+                    }
+                });
             }
-            two.collapseSubItems();
+            two.collapse();
         }
 
         ExpandingItem three = mExpandingList.createNewItem(R.layout.expanding_layout);
@@ -78,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 View view = three.createSubItem(i);
                 ((TextView) view.findViewById(R.id.sub_title)).setText(threeSub[i]);
             }
-            three.collapseSubItems();
+            three.collapse();
         }
 
         ExpandingItem four = mExpandingList.createNewItem(R.layout.expanding_layout);
@@ -92,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 View view = four.createSubItem(i);
                 ((TextView) view.findViewById(R.id.sub_title)).setText(fourSub[i]);
             }
-            four.collapseSubItems();
+            four.collapse();
         }
 
         ExpandingItem five = mExpandingList.createNewItem(R.layout.expanding_layout);
@@ -106,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 View view = five.createSubItem(i);
                 ((TextView) view.findViewById(R.id.sub_title)).setText(fiveSub[i]);
             }
-            five.collapseSubItems();
+            five.collapse();
         }
 
         ExpandingItem six = mExpandingList.createNewItem(R.layout.expanding_layout);
@@ -120,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 View view = six.createSubItem(i);
                 ((TextView) view.findViewById(R.id.sub_title)).setText(sixSub[i]);
             }
-            six.collapseSubItems();
+            six.collapse();
         }
 
         ExpandingItem seven = mExpandingList.createNewItem(R.layout.expanding_layout);
@@ -134,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 View view = seven.createSubItem(i);
                 ((TextView) view.findViewById(R.id.sub_title)).setText(sevenSub[i]);
             }
-            seven.collapseSubItems();
+            seven.collapse();
         }
 
         ExpandingItem eight = mExpandingList.createNewItem(R.layout.expanding_layout);
@@ -148,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                 View view = eight.createSubItem(i);
                 ((TextView) view.findViewById(R.id.sub_title)).setText(eightSub[i]);
             }
-            eight.collapseSubItems();
+            eight.collapse();
         }
     }
 }

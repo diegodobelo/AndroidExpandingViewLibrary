@@ -10,7 +10,7 @@
  DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
  ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  **/
-package com.diegodobelo.expandingviewlibrary;
+package com.diegodobelo.expandingview;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -29,6 +29,8 @@ import android.view.ViewStub;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import utils.CustomViewUtils;
 
 /**
  * Created by diego on 5/5/16.
@@ -148,37 +150,25 @@ public class ExpandingItem extends RelativeLayout {
         }
     }
 
-    public boolean isExpanded() {
-        return mSubItemsShown;
-    }
-
-    public void setStateChangedListener(OnItemStateChanged listener) {
-        mListener = listener;
-    }
-
-    public int getSubItemsCount() {
-        return mSubItemCount;
-    }
-
     private void setIndicatorBackgroundSize() {
-        setViewHeight(mBaseLayout.findViewById(R.id.icon_indicator_top), mIndicatorSize);
-        setViewHeight(mBaseLayout.findViewById(R.id.icon_indicator_bottom), mIndicatorSize);
-        setViewHeight(mBaseLayout.findViewById(R.id.icon_indicator_middle), 0);
+        CustomViewUtils.setViewHeight(mBaseLayout.findViewById(R.id.icon_indicator_top), mIndicatorSize);
+        CustomViewUtils.setViewHeight(mBaseLayout.findViewById(R.id.icon_indicator_bottom), mIndicatorSize);
+        CustomViewUtils.setViewHeight(mBaseLayout.findViewById(R.id.icon_indicator_middle), 0);
 
-        setViewWidth(mBaseLayout.findViewById(R.id.icon_indicator_top), mIndicatorSize);
-        setViewWidth(mBaseLayout.findViewById(R.id.icon_indicator_bottom), mIndicatorSize);
-        setViewWidth(mBaseLayout.findViewById(R.id.icon_indicator_middle), mIndicatorSize);
+        CustomViewUtils.setViewWidth(mBaseLayout.findViewById(R.id.icon_indicator_top), mIndicatorSize);
+        CustomViewUtils.setViewWidth(mBaseLayout.findViewById(R.id.icon_indicator_bottom), mIndicatorSize);
+        CustomViewUtils.setViewWidth(mBaseLayout.findViewById(R.id.icon_indicator_middle), mIndicatorSize);
 
         mItemLayout.post(new Runnable() {
             @Override
             public void run() {
-                setViewMargin(mIndicatorContainer,
+                CustomViewUtils.setViewMargin(mIndicatorContainer,
                         mIndicatorMarginLeft, mItemLayout.getMeasuredHeight()/2 - mIndicatorSize/2, mIndicatorMarginRight, 0);
             }
         });
 
-        setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_middle), (-1 * mIndicatorSize/2));
-        setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_bottom), (-1 * mIndicatorSize/2));
+        CustomViewUtils.setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_middle), (-1 * mIndicatorSize/2));
+        CustomViewUtils.setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_bottom), (-1 * mIndicatorSize/2));
 
     }
 
@@ -193,11 +183,37 @@ public class ExpandingItem extends RelativeLayout {
                     }
                 }
             });
-            setItemHeight(item);
+            item.post(new Runnable() {
+                @Override
+                public void run() {
+                    mItemHeight = item.getMeasuredHeight();
+                }
+            });
         }
     }
 
-    private void expand() {
+    public void setStateChangedListener(OnItemStateChanged listener) {
+        mListener = listener;
+    }
+
+    public boolean isExpanded() {
+        return mSubItemsShown;
+    }
+
+    public int getSubItemsCount() {
+        return mSubItemCount;
+    }
+
+    public void collapse() {
+        mBaseSubListLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                CustomViewUtils.setViewHeight(mBaseSubListLayout, 0);
+            }
+        });
+    }
+
+    public void expand() {
         toggleSubItems();
         expandSubItemsWithAnimation(0f);
         expandIconIndicator(0f);
@@ -276,27 +292,10 @@ public class ExpandingItem extends RelativeLayout {
         return false;
     }
 
-    public void collapseSubItems() {
-        mBaseSubListLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                setViewHeight(mBaseSubListLayout, 0);
-            }
-        });
-    }
-
-    private void animateSubItemsIn() {
-        for (int i = 0; i < mSubItemCount; i++) {
-            animateSubViews((ViewGroup) mBaseSubListLayout.getChildAt(i), i);
-            animateViewAlpha((ViewGroup) mBaseSubListLayout.getChildAt(i), i);
-        }
-    }
-
     private void setSubItemDimensions(final ViewGroup v) {
         v.post(new Runnable() {
             @Override
             public void run() {
-                //TODO: verify if it is set before used
                 if (mSubItemHeight <= 0) {
                     mSubItemHeight = v.getMeasuredHeight();
                     mSubItemWidth = v.getMeasuredWidth();
@@ -306,21 +305,17 @@ public class ExpandingItem extends RelativeLayout {
         });
     }
 
-    private void setItemHeight(final ViewGroup v) {
-        v.post(new Runnable() {
-            @Override
-            public void run() {
-                //TODO: verify if it is set before used
-                mItemHeight = v.getMeasuredHeight();
-            }
-        });
-
-    }
-
     private void toggleSubItems() {
         mSubItemsShown = !mSubItemsShown;
         if (mListener != null) {
             mListener.itemCollapseStateChanged(mSubItemsShown);
+        }
+    }
+
+    private void animateSubItemsIn() {
+        for (int i = 0; i < mSubItemCount; i++) {
+            animateSubViews((ViewGroup) mBaseSubListLayout.getChildAt(i), i);
+            animateViewAlpha((ViewGroup) mBaseSubListLayout.getChildAt(i), i);
         }
     }
 
@@ -379,7 +374,7 @@ public class ExpandingItem extends RelativeLayout {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float val = (float) animation.getAnimatedValue();
-                    setViewHeight(mIndicatorBackground, (int) val);
+                    CustomViewUtils.setViewHeight(mIndicatorBackground, (int) val);
                 }
             });
 
@@ -399,7 +394,7 @@ public class ExpandingItem extends RelativeLayout {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float val = (float) animation.getAnimatedValue();
-                    setViewHeight(mBaseSubListLayout, (int) val);
+                    CustomViewUtils.setViewHeight(mBaseSubListLayout, (int) val);
                 }
             });
 
@@ -407,25 +402,4 @@ public class ExpandingItem extends RelativeLayout {
         }
     }
 
-    private void setViewHeight(View v, int height) {
-        final ViewGroup.LayoutParams params = v.getLayoutParams();
-        params.height = height;
-        v.requestLayout();
-    }
-
-    private void setViewWidth(View v, int width) {
-        final ViewGroup.LayoutParams params = v.getLayoutParams();
-        params.width = width;
-        v.requestLayout();
-    }
-
-    private void setViewMarginTop(View v, int marginTop) {
-        setViewMargin(v, 0, marginTop, 0, 0);
-    }
-
-    private void setViewMargin(View v, int left, int top, int right, int bottom) {
-        final MarginLayoutParams params = (MarginLayoutParams) v.getLayoutParams();
-        params.setMargins(left, top, right, bottom);
-        v.requestLayout();
-    }
 }

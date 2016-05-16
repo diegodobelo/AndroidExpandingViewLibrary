@@ -1,4 +1,4 @@
-package com.diegodobelo.expandingviewlibrary;
+package com.diegodobelo.expandingview;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
