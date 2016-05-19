@@ -384,14 +384,44 @@ public class ExpandingItem extends RelativeLayout {
      */
     @Nullable
     public View createSubItem() {
+        return createSubItem(-1);
+    }
+
+    /**
+     * Creates a sub item based on sub_item_layout Layout, set as ExpandingItem layout attribute.
+     * @param position The position to add the new Item. Position should not be greater than the list size.
+     *                 If position is -1, the item will be added in the end of the list.
+     * @return The inflated sub item view.
+     */
+    @Nullable
+    public View createSubItem(int position) {
         if (mSubItemLayoutId == 0) {
             throw new RuntimeException("There is no layout to be inflated. " +
                     "Please set sub_item_layout value");
         }
+
+        if (position > mBaseSubListLayout.getChildCount()) {
+            throw new IllegalArgumentException("Cannot add an item at position " + position +
+                    ". List size is " + mBaseSubListLayout.getChildCount());
+        }
+
         ViewGroup subItemLayout = (ViewGroup) mInflater.inflate(mSubItemLayoutId, null, false);
-        mBaseSubListLayout.addView(subItemLayout);
+        if (position == -1) {
+            mBaseSubListLayout.addView(subItemLayout);
+        } else {
+            mBaseSubListLayout.addView(subItemLayout, position);
+        }
         mSubItemCount++;
         setSubItemDimensions(subItemLayout);
+
+        //Animate sub view in
+        if (mSubItemsShown) {
+            CustomViewUtils.setViewHeight(subItemLayout, 0);
+            expandSubItemsWithAnimation(mSubItemHeight * (mSubItemCount));
+            expandIconIndicator(mCurrentSubItemsHeight);
+            animateSubItemAppearance(subItemLayout, true);
+        }
+
         return subItemLayout;
     }
 
@@ -427,14 +457,14 @@ public class ExpandingItem extends RelativeLayout {
      * @param position The position of the item to be removed.
      */
     public void removeSubItemAt(int position) {
-        removeSubItem(mBaseSubListLayout.getChildAt(position));
+        removeSubItemFromList(mBaseSubListLayout.getChildAt(position));
     }
 
     /**
      * Remove the given view representing the sub item. Should be an existing sub item.
      * @param view The sub item to be removed.
      */
-    public void removeSubItem(View view) {
+    public void removeSubItemFromList(View view) {
         if (view != null) {
             mBaseSubListLayout.removeView(view);
             mSubItemCount--;
@@ -450,14 +480,9 @@ public class ExpandingItem extends RelativeLayout {
     /**
      * Remove the given view representing the sub item, with animation. Should be an existing sub item.
      * @param view The sub item to be removed.
-     * @param animate true to show animation. false otherwise.
      */
-    public void removeSubItem(View view, boolean animate) {
-        if (animate) {
-            removeSubItemWithAnimation(view);
-        } else {
-            removeSubItem(view);
-        }
+    public void removeSubItem(View view) {
+        animateSubItemAppearance(view, false);
     }
 
     /**
@@ -642,14 +667,15 @@ public class ExpandingItem extends RelativeLayout {
     /**
      * Remove the given sub item after animation ends.
      * @param subItem The view representing the sub item to be removed.
+     * @param isAdding true if adding a view. false otherwise.
      */
-    private void removeSubItemWithAnimation(final View subItem) {
-        ValueAnimator alphaAnimation =
-                ValueAnimator.ofFloat(1f, 0f);
-        alphaAnimation.setDuration(mAnimationDuration/2);
+    private void animateSubItemAppearance(final View subItem, boolean isAdding) {
+        ValueAnimator alphaAnimation = isAdding ?
+                ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
+        alphaAnimation.setDuration(isAdding ? mAnimationDuration*2 : mAnimationDuration/2);
 
-        ValueAnimator heightAnimation =
-                ValueAnimator.ofFloat(mSubItemHeight, 0f);
+        ValueAnimator heightAnimation = isAdding ?
+                ValueAnimator.ofFloat(0f, mSubItemHeight) : ValueAnimator.ofFloat(mSubItemHeight, 0f);
         heightAnimation.setDuration(mAnimationDuration/2);
         heightAnimation.setStartDelay(mAnimationDuration/2);
 
@@ -672,13 +698,15 @@ public class ExpandingItem extends RelativeLayout {
         alphaAnimation.start();
         heightAnimation.start();
 
-        heightAnimation.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                removeSubItem(subItem);
-            }
-        });
+        if (!isAdding) {
+            heightAnimation.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    removeSubItemFromList(subItem);
+                }
+            });
+        }
     }
 
 }
