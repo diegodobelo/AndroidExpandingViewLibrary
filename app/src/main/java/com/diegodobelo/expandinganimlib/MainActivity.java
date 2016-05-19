@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             String[] twoSub = {"Cat", "Mouse"};
             for (int i = 0; i < twoSub.length; i++) {
                 //TODO: index not needed anymore?
-                View view = two.createSubItem(i);
+                View view = two.createSubItem();
                 ((TextView) view.findViewById(R.id.sub_title)).setText(twoSub[i]);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             String[] threeSub = {};
             for (int i = 0; i < threeSub.length; i++) {
                 //TODO: index not needed anymore?
-                View view = three.createSubItem(i);
+                View view = three.createSubItem();
                 ((TextView) view.findViewById(R.id.sub_title)).setText(threeSub[i]);
             }
             three.collapse();
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             String[] fourSub = {"Dog", "Horse", "Boat"};
             for (int i = 0; i < fourSub.length; i++) {
                 //TODO: index not needed anymore?
-                View view = four.createSubItem(i);
+                View view = four.createSubItem();
                 ((TextView) view.findViewById(R.id.sub_title)).setText(fourSub[i]);
             }
             four.collapse();
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             String[] fiveSub = {};
             for (int i = 0; i < fiveSub.length; i++) {
                 //TODO: index not needed anymore?
-                View view = five.createSubItem(i);
+                View view = five.createSubItem();
                 ((TextView) view.findViewById(R.id.sub_title)).setText(fiveSub[i]);
             }
             five.collapse();
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             String[] sixSub = {"Blastoise", "Charmander"};
             for (int i = 0; i < sixSub.length; i++) {
                 //TODO: index not needed anymore?
-                View view = six.createSubItem(i);
+                View view = six.createSubItem();
                 ((TextView) view.findViewById(R.id.sub_title)).setText(sixSub[i]);
             }
             six.collapse();
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             String[] sevenSub = {"R2D2", "BB8"};
             for (int i = 0; i < sevenSub.length; i++) {
                 //TODO: index not needed anymore?
-                View view = seven.createSubItem(i);
+                View view = seven.createSubItem();
                 ((TextView) view.findViewById(R.id.sub_title)).setText(sevenSub[i]);
             }
             seven.collapse();
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             String[] eightSub = {"C3PO"};
             for (int i = 0; i < eightSub.length; i++) {
                 //TODO: index not needed anymore?
-                View view = eight.createSubItem(i);
+                View view = eight.createSubItem();
                 ((TextView) view.findViewById(R.id.sub_title)).setText(eightSub[i]);
             }
             eight.collapse();
