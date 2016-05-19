@@ -258,7 +258,7 @@ public class ExpandingItem extends RelativeLayout {
         });
 
         if (mItemLayoutId != 0) {
-            mItemLayout = (ViewGroup) mInflater.inflate(mItemLayoutId, null, false);
+            mItemLayout = (ViewGroup) mInflater.inflate(mItemLayoutId, mBaseLayout, false);
         }
         if (mSeparatorLayoutId != 0) {
             mSeparatorStub.setLayoutResource(mSeparatorLayoutId);
@@ -405,7 +405,7 @@ public class ExpandingItem extends RelativeLayout {
                     ". List size is " + mBaseSubListLayout.getChildCount());
         }
 
-        ViewGroup subItemLayout = (ViewGroup) mInflater.inflate(mSubItemLayoutId, null, false);
+        ViewGroup subItemLayout = (ViewGroup) mInflater.inflate(mSubItemLayoutId, mBaseSubListLayout, false);
         if (position == -1) {
             mBaseSubListLayout.addView(subItemLayout);
         } else {
