@@ -298,6 +298,10 @@ public class ExpandingItem extends RelativeLayout {
         }
     }
 
+    public void removeAllSubItems() {
+        mBaseSubListLayout.removeAllViews();
+    }
+
     private void setSubItemDimensions(final ViewGroup v) {
         v.post(new Runnable() {
             @Override
@@ -325,6 +329,9 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     private void animateSubViews(final ViewGroup viewGroup, int index) {
+        if (viewGroup == null) {
+            return;
+        }
         viewGroup.setLayerType(ViewGroup.LAYER_TYPE_HARDWARE, null);
         ValueAnimator animation = mSubItemsShown ?
                 ValueAnimator.ofFloat(0f, 1f) :
@@ -353,6 +360,9 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     private void animateViewAlpha(final ViewGroup viewGroup, int index) {
+        if (viewGroup == null) {
+            return;
+        }
         ValueAnimator animation = mSubItemsShown ?
                 ValueAnimator.ofFloat(0f, 1f) :
                 ValueAnimator.ofFloat(1f, 0f);
