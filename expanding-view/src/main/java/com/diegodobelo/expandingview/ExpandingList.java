@@ -23,8 +23,16 @@ import android.widget.ScrollView;
  * Created by diego on 5/9/16.
  */
 public class ExpandingList extends ScrollView {
+    /**
+     * Member variable to hold the items.
+     */
     private LinearLayout mContainer;
-    //TODO: inherit from scrollView. Create linear layout to add items
+
+    /**
+     * The constructor.
+     * @param context The View Context.
+     * @param attrs The attributes.
+     */
     public ExpandingList(Context context, AttributeSet attrs) {
         super(context, attrs);
         mContainer = new LinearLayout(context);
@@ -32,18 +40,36 @@ public class ExpandingList extends ScrollView {
         addView(mContainer);
     }
 
-    public void addItem(ExpandingItem item) {
+    /**
+     * Method to add a new item.
+     * @param item The ExpandingItem item.
+     */
+    private void addItem(ExpandingItem item) {
         mContainer.addView(item);
     }
 
+    /**
+     * Method to create and add a new item.
+     * @param layoutId The item Layout.
+     * @return The created item.
+     */
     public ExpandingItem createNewItem(int layoutId) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         ViewGroup item = (ViewGroup) inflater.inflate(layoutId, this, false);
         if (item instanceof ExpandingItem) {
             ExpandingItem expandingItem = (ExpandingItem) item;
+            expandingItem.setParent(this);
             addItem(expandingItem);
             return expandingItem;
         }
         throw new RuntimeException("The layout id not an instance of com.diegodobelo.expandinganimlib.ExpandingItem");
+    }
+
+    /**
+     * Scroll up to show sub items
+     * @param delta The calculated amount to scroll up.
+     */
+    protected void scrollUpByDelta(int delta) {
+        smoothScrollTo(0, getScrollY() + delta);
     }
 }

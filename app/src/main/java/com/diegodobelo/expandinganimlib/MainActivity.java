@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             two.setIndicatorColorRes(R.color.blue);
                 two.setIndicatorIconRes(R.drawable.ic_ghost);
             ((TextView) two.findViewById(R.id.title)).setText("Mary");
-            String[] twoSub = {"Cat", "Mouse"};
+            String[] twoSub = {"Cat", "Mouse", "House", "Boat", "Candy", "Collection", "Sport", "Ball", "Head", "Dog", "Horse", "Boat"};
             two.createSubItems(twoSub.length);
             for (int i = 0; i < twoSub.length; i++) {
                 View view = two.getSubItemView(i);
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        one.expand();
+//                        one.toggleExpanded();
                         View view = one.createSubItem(3);
                         ((TextView) view.findViewById(R.id.sub_title)).setText("Blastoise");
                     }

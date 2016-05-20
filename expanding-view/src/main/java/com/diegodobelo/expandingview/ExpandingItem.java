@@ -22,7 +22,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,6 +174,11 @@ public class ExpandingItem extends RelativeLayout {
     private int mSeparatorLayoutId;
 
     /**
+     * Holds a reference to the parent. Used to calculate positioning.
+     */
+    private ExpandingList mParent;
+
+    /**
      * Member variable to hold the listener of item state change.
      */
     private OnItemStateChanged mListener;
@@ -271,7 +275,7 @@ public class ExpandingItem extends RelativeLayout {
         mIndicatorContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                expand();
+                toggleExpanded();
             }
         });
 
@@ -347,16 +351,46 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     /**
-     * Expand the sub items.
+     * Expand or collapse the sub items.
      */
-    public void expand() {
+    public void toggleExpanded() {
         if (mSubItemCount == 0) {
             return;
         }
+
+        if (!mSubItemsShown) {
+            adjustItemPosIfHidden();
+        }
+
         toggleSubItems();
         expandSubItemsWithAnimation(0f);
         expandIconIndicator(0f);
         animateSubItemsIn();
+    }
+
+    /**
+     * Method to adjust Item position in parent if its sub items are outside screen.
+     */
+    private void adjustItemPosIfHidden() {
+        int parentHeight = mParent.getMeasuredHeight();
+        int[] parentPos = new int[2];
+        mParent.getLocationOnScreen(parentPos);
+        int parentY = parentPos[1];
+        int[] itemPos = new int[2];
+        mBaseLayout.getLocationOnScreen(itemPos);
+        int itemY = itemPos[1];
+
+
+        int endPosition = itemY + mItemHeight + (mSubItemHeight * mSubItemCount);
+        int parentEnd = parentY + parentHeight;
+        if (endPosition > parentEnd) {
+            int delta = endPosition - parentEnd;
+            int itemDeltaToTop = itemY - parentY;
+            if (delta > itemDeltaToTop) {
+                delta = itemDeltaToTop;
+            }
+            mParent.scrollUpByDelta(delta);
+        }
     }
 
     /**
@@ -519,6 +553,14 @@ public class ExpandingItem extends RelativeLayout {
     }
 
     /**
+     * Set the parent in order to auto scroll.
+     * @param parent The parent of type {@link ExpandingList}
+     */
+    protected void setParent(ExpandingList parent) {
+        mParent = parent;
+    }
+
+    /**
      * Method to add the inflated item and set click listener.
      * Also measures the item height.
      * @param item The inflated item layout.
@@ -529,7 +571,7 @@ public class ExpandingItem extends RelativeLayout {
             item.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    expand();
+                    toggleExpanded();
                 }
             });
             item.post(new Runnable() {
