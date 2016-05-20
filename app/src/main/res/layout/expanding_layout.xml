@@ -24,4 +24,5 @@
     app:indicator_margin_right="16dp"
     app:show_indicator="true"
     app:show_animation="true"
+    app:start_collapsed="false"
     app:animation_duration="250"/>

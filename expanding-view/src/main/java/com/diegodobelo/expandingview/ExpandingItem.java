@@ -22,6 +22,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,9 +144,15 @@ public class ExpandingItem extends RelativeLayout {
 
     /**
      * Member variable to hold the boolean value that defines if the animation should be shown.
-     * Set by show_animation in ExpandingItem layout.
+     * Set by show_animation in ExpandingItem layout. Default is true.
      */
     private boolean mShowAnimation;
+
+    /**
+     * Member variable to hold the boolean value that defines if the sub list will start collapsed or not.
+     * Set by start_collapsed in ExpandingItem layout. Default is true.
+     */
+    private boolean mStartCollapsed;
 
     /**
      * Member variable to hold the state of sub items. true if shown. false otherwise.
@@ -192,12 +199,22 @@ public class ExpandingItem extends RelativeLayout {
         super(context, attrs);
 
         readAttributes(context, attrs);
+        setupStateVariables();
         inflateLayouts(context);
 
         setupIndicator();
 
         addItem(mItemLayout);
         addView(mBaseLayout);
+    }
+
+    /**
+     * Setup the variables that defines item state.
+     */
+    private void setupStateVariables() {
+        if (!mShowAnimation) {
+            mAnimationDuration = 0;
+        }
     }
 
     /**
@@ -229,6 +246,7 @@ public class ExpandingItem extends RelativeLayout {
             mIndicatorMarginRight = array.getDimensionPixelSize(R.styleable.ExpandingItem_indicator_margin_right, 0);
             mShowIndicator = array.getBoolean(R.styleable.ExpandingItem_show_indicator, true);
             mShowAnimation = array.getBoolean(R.styleable.ExpandingItem_show_animation, true);
+            mStartCollapsed = array.getBoolean(R.styleable.ExpandingItem_start_collapsed, true);
             mAnimationDuration = array.getInt(R.styleable.ExpandingItem_animation_duration, DEFAULT_ANIM_DURATION);
         } finally {
             array.recycle();
@@ -263,10 +281,6 @@ public class ExpandingItem extends RelativeLayout {
         if (mSeparatorLayoutId != 0) {
             mSeparatorStub.setLayoutResource(mSeparatorLayoutId);
             mSeparatorStub.inflate();
-        }
-
-        if (!mShowAnimation) {
-            mAnimationDuration = 0;
         }
     }
 
@@ -323,6 +337,7 @@ public class ExpandingItem extends RelativeLayout {
      * Collapses the sub items.
      */
     public void collapse() {
+        mSubItemsShown = false;
         mBaseSubListLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -436,6 +451,17 @@ public class ExpandingItem extends RelativeLayout {
         }
         for (int i = 0; i < count; i++) {
             createSubItem();
+        }
+        if (mStartCollapsed) {
+            collapse();
+        } else {
+            mSubItemsShown = true;
+            mBaseSubListLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    expandIconIndicator(0f);
+                }
+            });
         }
     }
 
