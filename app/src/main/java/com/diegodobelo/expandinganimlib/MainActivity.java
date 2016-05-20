@@ -28,129 +28,49 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mExpandingList = (ExpandingList) findViewById(R.id.expanding_list_main);
-        createSubItems();
+        createItems();
     }
 
-    private void createSubItems() {
-        final ExpandingItem one = mExpandingList.createNewItem(R.layout.expanding_layout);
-        if (one != null) {
-            one.setIndicatorColorRes(R.color.pink);
-            one.setIndicatorIconRes(R.drawable.ic_ghost);
-            ((TextView) one.findViewById(R.id.title)).setText("John");
-            String[] oneSub = {"House", "Boat", "Candy", "Collection", "Sport", "Ball", "Head"};
-            one.createSubItems(oneSub.length);
-            for (int i = 0; i < oneSub.length; i++) {
-                View view = one.getSubItemView(i);
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        one.removeSubItem(v);
-                    }
-                });
-                ((TextView) view.findViewById(R.id.sub_title)).setText(oneSub[i]);
+    private void createItems() {
+        addItem("John", new String[]{"House", "Boat", "Candy", "Collection", "Sport", "Ball", "Head"}, R.color.pink, R.drawable.ic_ghost);
+        addItem("Mary", new String[]{"Dog", "Horse", "Boat"}, R.color.blue, R.drawable.ic_ghost);
+        addItem("Ana", new String[]{"Cat"}, R.color.purple, R.drawable.ic_ghost);
+        addItem("Peter", new String[]{"Parrot", "Elephant", "Coffee"}, R.color.yellow, R.drawable.ic_ghost);
+        addItem("Joseph", new String[]{}, R.color.orange, R.drawable.ic_ghost);
+        addItem("Paul", new String[]{"Golf", "Football"}, R.color.green, R.drawable.ic_ghost);
+        addItem("Larry", new String[]{"Ferrari", "Mazda", "Honda", "Toyota", "Fiat"}, R.color.blue, R.drawable.ic_ghost);
+        addItem("Moe", new String[]{"Beans", "Rice", "Meat"}, R.color.yellow, R.drawable.ic_ghost);
+        addItem("Bart", new String[]{"Hamburger", "Ice cream", "Candy"}, R.color.purple, R.drawable.ic_ghost);
+    }
+
+    private void addItem(String title, String[] subItems, int colorRes, int iconRes) {
+        final ExpandingItem item = mExpandingList.createNewItem(R.layout.expanding_layout);
+        if (item != null) {
+            item.setIndicatorColorRes(colorRes);
+            item.setIndicatorIconRes(iconRes);
+            ((TextView) item.findViewById(R.id.title)).setText(title);
+            item.createSubItems(subItems.length);
+            for (int i = 0; i < subItems.length; i++) {
+                final View view = item.getSubItemView(i);
+                configureSubItem(item, view, subItems[i]);
             }
-//            one.collapse();
+            item.findViewById(R.id.add_more_sub_items).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    View newSubItem = item.createSubItem();
+                    configureSubItem(item, newSubItem, "New Item");
+                }
+            });
         }
+    }
 
-        ExpandingItem two = mExpandingList.createNewItem(R.layout.expanding_layout);
-        if (two != null) {
-            two.setIndicatorColorRes(R.color.blue);
-                two.setIndicatorIconRes(R.drawable.ic_ghost);
-            ((TextView) two.findViewById(R.id.title)).setText("Mary");
-            String[] twoSub = {"Cat", "Mouse", "House", "Boat", "Candy", "Collection", "Sport", "Ball", "Head", "Dog", "Horse", "Boat"};
-            two.createSubItems(twoSub.length);
-            for (int i = 0; i < twoSub.length; i++) {
-                View view = two.getSubItemView(i);
-                ((TextView) view.findViewById(R.id.sub_title)).setText(twoSub[i]);
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        one.toggleExpanded();
-                        View view = one.createSubItem(3);
-                        ((TextView) view.findViewById(R.id.sub_title)).setText("Blastoise");
-                    }
-                });
+    private void configureSubItem(final ExpandingItem item, final View view, String subTitle) {
+        ((TextView) view.findViewById(R.id.sub_title)).setText(subTitle);
+        view.findViewById(R.id.remove_sub_item).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                item.removeSubItem(view);
             }
-//            two.collapse();
-        }
-
-        ExpandingItem three = mExpandingList.createNewItem(R.layout.expanding_layout);
-        if (three != null) {
-            three.setIndicatorColorRes(R.color.purple);
-            three.setIndicatorIconRes(R.drawable.ic_ghost);
-            ((TextView) three.findViewById(R.id.title)).setText("Ana");
-//            three.collapse();
-        }
-
-        ExpandingItem four = mExpandingList.createNewItem(R.layout.expanding_layout);
-        if (four != null) {
-            four.setIndicatorColorRes(R.color.orange);
-            four.setIndicatorIconRes(R.drawable.ic_ghost);
-            ((TextView) four.findViewById(R.id.title)).setText("Paul");
-            String[] fourSub = {"Dog", "Horse", "Boat"};
-            four.createSubItems(fourSub.length);
-            for (int i = 0; i < fourSub.length; i++) {
-                View view = four.getSubItemView(i);
-                ((TextView) view.findViewById(R.id.sub_title)).setText(fourSub[i]);
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        View view = one.createSubItem(10);
-                        ((TextView) view.findViewById(R.id.sub_title)).setText("Blastoise");
-                    }
-                });
-            }
-//            four.collapse();
-        }
-
-        ExpandingItem five = mExpandingList.createNewItem(R.layout.expanding_layout);
-        if (five != null) {
-            five.setIndicatorColorRes(R.color.green);
-            five.setIndicatorIconRes(R.drawable.ic_ghost);
-            ((TextView) five.findViewById(R.id.title)).setText("Rey");
-//            five.collapse();
-        }
-
-        ExpandingItem six = mExpandingList.createNewItem(R.layout.expanding_layout);
-        if (six != null) {
-            six.setIndicatorColorRes(R.color.pink);
-            six.setIndicatorIconRes(R.drawable.ic_ghost);
-            ((TextView) six.findViewById(R.id.title)).setText("Finn");
-            String[] sixSub = {"Blastoise", "Charmander"};
-            six.createSubItems(sixSub.length);
-            for (int i = 0; i < sixSub.length; i++) {
-                View view = six.getSubItemView(i);
-                ((TextView) view.findViewById(R.id.sub_title)).setText(sixSub[i]);
-            }
-//            six.collapse();
-        }
-
-        ExpandingItem seven = mExpandingList.createNewItem(R.layout.expanding_layout);
-        if (seven != null) {
-            seven.setIndicatorColorRes(R.color.orange);
-            seven.setIndicatorIconRes(R.drawable.ic_ghost);
-            ((TextView) seven.findViewById(R.id.title)).setText("Peter");
-            String[] sevenSub = {"R2D2", "BB8"};
-            seven.createSubItems(sevenSub.length);
-            for (int i = 0; i < sevenSub.length; i++) {
-                View view = seven.getSubItemView(i);
-                ((TextView) view.findViewById(R.id.sub_title)).setText(sevenSub[i]);
-            }
-//            seven.collapse();
-        }
-
-        ExpandingItem eight = mExpandingList.createNewItem(R.layout.expanding_layout);
-        if (eight != null) {
-            eight.setIndicatorColorRes(R.color.green);
-            eight.setIndicatorIconRes(R.drawable.ic_ghost);
-            ((TextView) eight.findViewById(R.id.title)).setText("Scott");
-            String[] eightSub = {"C3PO"};
-            eight.createSubItems(eightSub.length);
-            for (int i = 0; i < eightSub.length; i++) {
-                View view = eight.getSubItemView(i);
-                ((TextView) view.findViewById(R.id.sub_title)).setText(eightSub[i]);
-            }
-//            eight.collapse();
-        }
+        });
     }
 }

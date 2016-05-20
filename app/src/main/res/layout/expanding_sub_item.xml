@@ -16,11 +16,21 @@
     android:layout_height="48dp">
     <TextView
         android:id="@+id/sub_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:gravity="center_vertical|left"
         android:alpha="0.6"/>
 
+    <ImageView
+        android:id="@+id/remove_sub_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_delete"
+        android:alpha="0.6"/>
 </RelativeLayout>

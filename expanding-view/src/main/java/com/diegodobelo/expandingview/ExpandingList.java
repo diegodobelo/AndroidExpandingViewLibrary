@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 
 /**
  * Created by diego on 5/9/16.
+ * This is the Expanding List. User can create ExpandingItem by calling {@link #createNewItem(int)}.
  */
 public class ExpandingList extends ScrollView {
     /**

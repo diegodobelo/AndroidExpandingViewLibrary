@@ -469,6 +469,7 @@ public class ExpandingItem extends RelativeLayout {
             expandSubItemsWithAnimation(mSubItemHeight * (mSubItemCount));
             expandIconIndicator(mCurrentSubItemsHeight);
             animateSubItemAppearance(subItemLayout, true);
+            adjustItemPosIfHidden();
         }
 
         return subItemLayout;
