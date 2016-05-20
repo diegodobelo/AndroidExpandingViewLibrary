@@ -17,32 +17,28 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 /**
  * Created by diego on 5/9/16.
  */
-public class ExpandingList extends LinearLayout {
+public class ExpandingList extends ScrollView {
+    private LinearLayout mContainer;
     //TODO: inherit from scrollView. Create linear layout to add items
-    public ExpandingList(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
     public ExpandingList(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setOrientation(VERTICAL);
-    }
-
-    public ExpandingList(Context context) {
-        super(context);
+        mContainer = new LinearLayout(context);
+        mContainer.setOrientation(LinearLayout.VERTICAL);
+        addView(mContainer);
     }
 
     public void addItem(ExpandingItem item) {
-        addView(item);
+        mContainer.addView(item);
     }
 
     public ExpandingItem createNewItem(int layoutId) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        ViewGroup item = (ViewGroup) inflater.inflate(layoutId, null, false);
+        ViewGroup item = (ViewGroup) inflater.inflate(layoutId, this, false);
         if (item instanceof ExpandingItem) {
             ExpandingItem expandingItem = (ExpandingItem) item;
             addItem(expandingItem);

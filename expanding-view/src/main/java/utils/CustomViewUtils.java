@@ -1,7 +1,12 @@
 package utils;
 
+import android.content.Context;
+import android.graphics.Point;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 /**
  * Created by diego on 5/16/16.
@@ -27,5 +32,13 @@ public class CustomViewUtils {
         final ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
         params.setMargins(left, top, right, bottom);
         v.requestLayout();
+    }
+
+    public static Point getScreenSize(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size;
     }
 }

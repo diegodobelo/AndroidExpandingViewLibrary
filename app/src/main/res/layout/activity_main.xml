@@ -18,12 +18,8 @@
     tools:context="com.diegodobelo.expandinganimlib.MainActivity"
     android:background="@color/colorBackground">
 
-    <ScrollView
+    <com.diegodobelo.expandingview.ExpandingList
+        android:id="@+id/expanding_list_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.diegodobelo.expandingview.ExpandingList
-            android:id="@+id/expanding_list_main"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </ScrollView>
+        android:layout_height="match_parent"/>
 </RelativeLayout>
