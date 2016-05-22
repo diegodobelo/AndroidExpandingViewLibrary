@@ -12,16 +12,18 @@
     ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="94dp">
-    <TextView
+    <com.diegodobelo.expandinganimlib.CustomTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textColor="@color/white"
         android:gravity="center_vertical|left"
-        android:textSize="20sp"/>
+        app:fontFamily="Muli-Regular.ttf"
+        android:textSize="22sp"/>
 
     <ImageView
         android:id="@+id/add_more_sub_items"
