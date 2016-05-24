@@ -70,7 +70,12 @@ public class ExpandingList extends ScrollView {
      * Scroll up to show sub items
      * @param delta The calculated amount to scroll up.
      */
-    protected void scrollUpByDelta(int delta) {
-        smoothScrollTo(0, getScrollY() + delta);
+    protected void scrollUpByDelta(final int delta) {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                smoothScrollTo(0, getScrollY() + delta);
+            }
+        });
     }
 }

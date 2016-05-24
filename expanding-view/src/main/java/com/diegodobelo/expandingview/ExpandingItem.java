@@ -729,6 +729,16 @@ public class ExpandingItem extends RelativeLayout {
                 }
             });
 
+            animation.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    if (mSubItemsShown) {
+                        adjustItemPosIfHidden();
+                    }
+                }
+            });
+
             animation.start();
         }
     }
