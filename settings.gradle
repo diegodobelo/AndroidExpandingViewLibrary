@@ -1,1 +1,1 @@
-include ':app', ':expanding-view'
+include ':example', ':expanding-view'
