@@ -1,3 +1,9 @@
+## About the Library
+This library is strongly inspired in this concept from Hila Peleg in dribble: https://dribbble.com/shots/2340386-Shopping-List
+
+For more details on how to use this library please refer to the example in this repository. You can se a video of the example working here: https://youtu.be/moWaruuaEP0
+
+
 ## Adding the Library to gradle file
 ```gradle
 dependencies {
@@ -115,3 +121,16 @@ item.setIndicatorIconRes(R.drawable.ic_icon);
 
 ```
 ### ExpandingItem layout attributes
+
+Attribute Name         | Type         | Default Value | Meaning                                                             | Mandatory
+---------------------- | ------------ | ------------- | --------------------------------------------------------------------| --------
+item_layout            | reference    |               | The layout for the Item (header).                                   | Yes
+sub_item_layout        | reference    |               | The layout for the sub items.                                       | Yes
+separator_layout       | reference    |               | A layout to separate items.                                         | No
+indicator_size         | dimension    |       0dp     | The indicator size in dp.                                           | No
+indicator_margin_left  | dimension    |       0dp     | The margin between the indicator and its left.                      | No
+indicator_margin_right | dimension    |       0dp     | The margin between the indicator and its right.                     | No
+show_indicator         | boolean      |       true    | true if you want to show the indicator. false otherwise.            | No
+show_animation         | boolean      |       true    | true if you want to show animations. false otherwise.               | No
+start_collapsed        | boolean      |       true    | true if you want the sub views to start collapsed. false otherwise. | No
+animation_duration     | integer      |       300ms   | The animations duration in milliseconds.                            | No
