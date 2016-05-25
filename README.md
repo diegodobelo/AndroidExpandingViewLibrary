@@ -1,1 +1,117 @@
-Empty readme file
+## Adding the Library to gradle file
+```gradle
+dependencies {
+    compile 'com.diegodobelo.expandingview:expanding-view:0.9.1'
+}
+```
+
+## Using the Library
+### Layouts
+First of all include the ExpandingList in your Activity (or Fragment) layout. This will be the list of items (ExpandItem):
+
+```xml
+<com.diegodobelo.expandingview.ExpandingList
+        android:id="@+id/expanding_list_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+```
+
+Now create a new layout (xml) file to represent the item (such as `res/layout/expanding_item.xml`). This will be the Item (header) that can be expanded to show sub items:
+
+```xml
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="94dp">
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical|left"
+        android:textSize="22sp"/>
+</RelativeLayout>
+```
+
+Create another layout file to represent the sub items (such as `/res/expanding_sub_item.xml`). This will be the sub items that will be shown when the Item is expanded:
+
+```xml
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="48dp">
+    <TextView
+        android:id="@+id/sub_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:textSize="18sp"
+        android:gravity="center_vertical|left"/>
+</RelativeLayout>
+```
+
+Now create a layout file (such as `/res/expanding_layout.xml`) to represent the whole item, including both item layout and sub item layout. We will explain each custom attribute later:
+
+```xml
+<com.diegodobelo.expandingview.ExpandingItem
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:item_layout="@layout/expanding_item"
+    app:sub_item_layout="@layout/expanding_sub_item"
+    app:indicator_size="42dp"
+    app:indicator_margin_left="16dp"
+    app:indicator_margin_right="16dp"
+    app:show_indicator="true"
+    app:show_animation="true"
+    app:start_collapsed="true"
+    app:animation_duration="250"/>
+```
+
+Note that we included `expanding_item` and `expanding_sub_item` layouts created before.
+
+### Java code
+
+Now that you have all the required layouts you are able to use them in Java code. Let's start inflating the ExpandingList:
+
+```java
+ExpandingList expandingList = (ExpandingList) findViewById(R.id.expanding_list_main);
+```
+
+Create a new ExpandingItem in the ExpandingList. This method receives the `expanding_layout` created before. Yes! We can have different layouts for different items in the same list. The items will be created based on `expanding_item` layout and the sub items will be created based on `expanding_sub_item` layout:
+
+```java
+ExpandingItem item = expandingList.createNewItem(R.layout.expanding_layout);
+
+/*ExpandingItem extends from View, so you can call
+findViewById to get any View inside the layout*/
+(TextView) item.findViewById(R.id.title)).setText("It Works!!");
+```
+
+Let's create the sub items. There is a method to create items in batch:
+
+```java
+//This will create 5 items
+item.createSubItems(5);
+
+//get a sub item View
+View subItemZero = item.getSubItemView(0);
+((TextView) subItemZero.findViewById(R.id.sub_title)).setText("Cool");
+
+View subItemOne = item.getSubItemView(1);
+((TextView) subItemOne.findViewById(R.id.sub_title)).setText("Awesome");
+
+...
+
+```
+
+For each item you can set the indicator color and the indicator icon:
+
+```java
+item.setIndicatorColorRes(R.color.blue);
+item.setIndicatorIconRes(R.drawable.ic_icon);
+
+```
+### ExpandingItem layout attributes

@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
             //We can create items in batch.
             item.createSubItems(subItems.length);
-            for (int i = 0; i < subItems.length; i++) {
+            for (int i = 0; i < item.getSubItemsCount(); i++) {
                 //Let's get the created sub item by its index
                 final View view = item.getSubItemView(i);
 

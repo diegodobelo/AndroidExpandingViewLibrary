@@ -4,7 +4,7 @@ ext {
     bintrayRepo = 'maven'
     bintrayName = 'expanding-view'
 
-    publishedGroupId = 'com.diegodobelo'
+    publishedGroupId = 'com.diegodobelo.expandingview'
     libraryName = 'ExpandingView'
     artifact = 'expanding-view'
 
@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/diegodobelo/AndroidExpandingViewLibrary'
     gitUrl = 'https://github.com/diegodobelo/AndroidExpandingViewLibrary.git'
 
-    libraryVersion = '0.0.1'
+    libraryVersion = '0.9.1'
 
     developerId = 'diegodobelo'
     developerName = 'Diego Bezerra'
@@ -31,8 +31,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 1
-        versionName "0.0.1"
+        versionCode 91
+        versionName "0.9.1"
     }
     buildTypes {
         release {
