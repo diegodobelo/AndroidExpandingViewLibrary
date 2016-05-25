@@ -134,3 +134,103 @@ show_indicator         | boolean      |       true    | true if you want to show
 show_animation         | boolean      |       true    | true if you want to show animations. false otherwise.               | No
 start_collapsed        | boolean      |       true    | true if you want the sub views to start collapsed. false otherwise. | No
 animation_duration     | integer      |       300ms   | The animations duration in milliseconds.                            | No
+
+## ExpandingItem public methods
+
+#### `public void setStateChangedListener(OnItemStateChanged listener)`
+
+Set a listener to listen item stage changed.
+
+ * **Parameters:** `listener` — The listener of type {@link OnItemStateChanged}
+
+#### `public boolean isExpanded()`
+
+Tells if the item is expanded.
+
+ * **Returns:** true if expanded. false otherwise.
+
+#### `public int getSubItemsCount()`
+
+Returns the count of sub items.
+
+ * **Returns:** The count of sub items.
+
+#### `public void collapse()`
+
+Collapses the sub items.
+
+#### `public void toggleExpanded()`
+
+Expand or collapse the sub items.
+
+#### `public void setIndicatorColorRes(int colorRes)`
+
+Set the indicator color by resource.
+
+ * **Parameters:** `colorRes` — The color resource.
+
+#### `public void setIndicatorColor(int color)`
+
+Set the indicator color by color value.
+
+ * **Parameters:** `color` — The color value.
+
+## `public void setIndicatorIconRes(int iconRes)`
+
+Set the indicator icon by resource.
+
+ * **Parameters:** `iconRes` — The icon resource.
+
+#### `public void setIndicatorIcon(Drawable icon)`
+
+Set the indicator icon.
+
+ * **Parameters:** `icon` — Drawable of the indicator icon.
+
+#### `@Nullable public View createSubItem()`
+
+Creates a sub item based on sub_item_layout Layout, set as ExpandingItem layout attribute.
+
+ * **Returns:** The inflated sub item view.
+
+#### `@Nullable public View createSubItem(int position)`
+
+Creates a sub item based on sub_item_layout Layout, set as ExpandingItem layout attribute. If position is -1, the item will be added in the end of the list.
+
+ * **Parameters:** `position` — The position to add the new Item. Position should not be greater than the list size.
+ * **Returns:** The inflated sub item view.
+
+#### `public void createSubItems(int count)`
+
+Creates as many sub items as requested in {@param count}.
+
+ * **Parameters:** `count` — The quantity of sub items.
+
+#### `public View getSubItemView(int position)`
+
+Get a sub item at the given position.
+
+ * **Parameters:** `position` — The sub item position. Should be > 0.
+ * **Returns:** The sub item inflated view at the given position.
+
+#### `public void removeSubItemAt(int position)`
+
+Remove sub item at the given position.
+
+ * **Parameters:** `position` — The position of the item to be removed.
+
+#### `public void removeSubItemFromList(View view)`
+
+Remove the given view representing the sub item. Should be an existing sub item.
+
+ * **Parameters:** `view` — The sub item to be removed.
+
+#### `public void removeSubItem(View view)`
+
+Remove the given view representing the sub item, with animation. Should be an existing sub item.
+
+ * **Parameters:** `view` — The sub item to be removed.
+
+#### `public void removeAllSubItems()`
+
+Remove all sub items.
