@@ -1,3 +1,4 @@
+https://img.shields.io/badge/Android%20Arsenal-AndroidExpandingViewLibrary-green.svg?style=true)](https://android-arsenal.com/details/1/3667
 ## About the Library
 This library is strongly inspired in this concept from Hila Peleg in dribble: https://dribbble.com/shots/2340386-Shopping-List
 
