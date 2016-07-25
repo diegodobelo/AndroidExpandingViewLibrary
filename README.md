@@ -8,7 +8,7 @@ For more details on how to use this library please refer to the example in this 
 ## Adding the Library to gradle file
 ```gradle
 dependencies {
-    compile 'com.diegodobelo.expandingview:expanding-view:0.9.1'
+    compile 'com.diegodobelo.expandingview:expanding-view:0.9.2'
 }
 ```
 
