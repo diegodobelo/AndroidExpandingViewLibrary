@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textColor="@color/white"
-        android:gravity="center_vertical|left"
+        android:gravity="center_vertical|start"
         app:fontFamily="Muli-Regular.ttf"
         android:textSize="22sp"/>
 
@@ -30,7 +30,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_action_add"/>
 </RelativeLayout>

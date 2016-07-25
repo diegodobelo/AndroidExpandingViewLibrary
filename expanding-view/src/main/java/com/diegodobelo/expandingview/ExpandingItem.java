@@ -268,7 +268,7 @@ public class ExpandingItem extends RelativeLayout {
         mBaseListLayout = (LinearLayout) mBaseLayout.findViewById(R.id.base_list_layout);
         mBaseSubListLayout = (LinearLayout) mBaseLayout.findViewById(R.id.base_sub_list_layout);
         mIndicatorImage = (ImageView) mBaseLayout.findViewById(R.id.indicator_image);
-        mBaseLayout.findViewById(R.id.icon_container).bringToFront();
+        mBaseLayout.findViewById(R.id.icon_indicator_top).bringToFront();
         mSeparatorStub = (ViewStub) mBaseLayout.findViewById(R.id.base_separator_stub);
         mIndicatorBackground = mBaseLayout.findViewById(R.id.icon_indicator_middle);
         mIndicatorContainer = (ViewGroup) mBaseLayout.findViewById(R.id.indicator_container);
