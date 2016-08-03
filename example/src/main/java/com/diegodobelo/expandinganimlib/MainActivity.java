@@ -12,7 +12,6 @@
  **/
 package com.diegodobelo.expandinganimlib;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -78,9 +77,15 @@ public class MainActivity extends AppCompatActivity {
                         public void itemCreated(String title) {
                             View newSubItem = item.createSubItem();
                             configureSubItem(item, newSubItem, title);
-
                         }
                     });
+                }
+            });
+
+            item.findViewById(R.id.remove_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mExpandingList.removeItem(item);
                 }
             });
         }

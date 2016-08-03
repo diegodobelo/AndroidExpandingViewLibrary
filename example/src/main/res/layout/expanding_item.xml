@@ -35,4 +35,16 @@
         android:layout_marginEnd="16dp"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_action_add"/>
+
+    <ImageView
+        android:id="@+id/remove_item"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_toLeftOf="@id/add_more_sub_items"
+        android:layout_toStartOf="@id/add_more_sub_items"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_delete"/>
 </RelativeLayout>

@@ -67,6 +67,22 @@ public class ExpandingList extends ScrollView {
     }
 
     /**
+     * Method to remove an item.
+     * @param item The item to be removed.
+     */
+    public void removeItem(final ExpandingItem item) {
+        mContainer.removeView(item);
+    }
+
+
+    /**
+     * Method to remove all items.
+     */
+    public void removeAllViews() {
+        mContainer.removeAllViews();
+    }
+
+    /**
      * Scroll up to show sub items
      * @param delta The calculated amount to scroll up.
      */

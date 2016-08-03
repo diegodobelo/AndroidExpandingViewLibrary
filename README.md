@@ -136,6 +136,25 @@ show_animation         | boolean      |       true    | true if you want to show
 start_collapsed        | boolean      |       true    | true if you want the sub views to start collapsed. false otherwise. | No
 animation_duration     | integer      |       300ms   | The animations duration in milliseconds.                            | No
 
+## ExpandingList public methods
+
+##### `public void createNewItem(int layoutId)`
+
+Method to create and add a new item.
+
+ * **Parameters:** `layoutId` — The item Layout
+
+##### `public void removeItem(ExpandingItem item)`
+
+ Method to remove an item.
+
+ * **Parameters:** `item` — The item to be removed, of type {@link ExpandingItem}
+
+##### `public void removeAllViews()`
+
+Method to remove all items.
+
+
 ## ExpandingItem public methods
 
 ##### `public void setStateChangedListener(OnItemStateChanged listener)`
