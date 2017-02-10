@@ -67,6 +67,26 @@ public class ExpandingList extends ScrollView {
     }
 
     /**
+     * Method to get an Item from the ExpandingList by its index.
+     * @param index The index of the item.
+     * @return An ExpandingItem in the list.
+     */
+    public ExpandingItem getItemByIndex(int index) {
+        if (index < 0 || index >= getItemsCount()) {
+            throw new RuntimeException("Index must be grater than 0 and lesser than list size");
+        }
+        return (ExpandingItem) mContainer.getChildAt(index);
+    }
+
+    /**
+     * Return the items count.
+     * @return Items count.
+     */
+    public int getItemsCount() {
+        return mContainer.getChildCount();
+    }
+
+    /**
      * Method to remove an item.
      * @param item The item to be removed.
      */

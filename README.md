@@ -8,7 +8,7 @@ For more details on how to use this library please refer to the example in this 
 ## Adding the Library to gradle file
 ```gradle
 dependencies {
-    compile 'com.diegodobelo.expandingview:expanding-view:0.9.3'
+    compile 'com.diegodobelo.expandingview:expanding-view:0.9.4'
 }
 ```
 
@@ -154,6 +154,18 @@ Method to create and add a new item.
 
 Method to remove all items.
 
+##### `ExpandingItem getItemByIndex(int index)`
+
+Method to get an Item from the ExpandingList by its index.
+
+* **Parameters:** `index` — The index of the item.
+* **Returns:** An {@link ExpandingItem} in the list.
+
+##### `public int getItemsCount()`
+
+ Return how many items exists in the list.
+
+* **Returns:** Items count.
 
 ## ExpandingItem public methods
 
