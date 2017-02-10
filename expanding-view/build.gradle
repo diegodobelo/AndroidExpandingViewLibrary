@@ -40,6 +40,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    tasks.withType(Javadoc).all { enabled = false }
 }
 
 dependencies {

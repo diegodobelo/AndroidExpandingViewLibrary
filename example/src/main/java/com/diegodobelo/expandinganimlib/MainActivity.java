@@ -88,14 +88,6 @@ public class MainActivity extends AppCompatActivity {
                     mExpandingList.removeItem(item);
                 }
             });
-
-            item.setStateChangedListener(new ExpandingItem.OnItemStateChanged() {
-                @Override
-                public void itemCollapseStateChanged(boolean expanded) {
-                    ExpandingItem change = mExpandingList.getItemByIndex(2);
-                    ((TextView) change.findViewById(R.id.title)).setText("Blastoise");
-                }
-            });
         }
     }
 
