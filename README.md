@@ -1,8 +1,18 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidExpandingViewLibrary-green.svg?style=true)](https://android-arsenal.com/details/1/3667)
 ## About the Library
-This library is strongly inspired in this concept from Hila Peleg in dribble: https://dribbble.com/shots/2340386-Shopping-List
 
-For more details on how to use this library please refer to the example in this repository. You can se a video of the example working here: https://youtu.be/moWaruuaEP0
+### inspiration
+This library is strongly inspired in this concept from [Hila Peleg in dribble](https://dribbble.com/shots/2340386-Shopping-List).
+See it below
+
+![Android Arsenal](https://raw.githubusercontent.com/tamzi/AndroidExpandingViewLibrary/master/art/shoping_list.gif)
+
+
+### Working example
+For more details on how to use this library please refer to the example in this repository. You can see a video of the example working here: 
+
+[![a video of the example working here](https://img.youtube.com/vi/moWaruuaEP0/0.jpg)](https://www.youtube.com/watch?v=moWaruuaEP0)
+
 
 
 ## Adding the Library to gradle file
