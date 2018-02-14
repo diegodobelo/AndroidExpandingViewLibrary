@@ -2,7 +2,15 @@
 ## About the Library
 This library is strongly inspired in this concept from Hila Peleg in dribble: https://dribbble.com/shots/2340386-Shopping-List
 
-For more details on how to use this library please refer to the example in this repository. You can se a video of the example working here: https://youtu.be/moWaruuaEP0
+
+
+
+
+
+For more details on how to use this library please refer to the example in this repository. You can see a video of the example working here: 
+
+[![a video of the example working here](https://img.youtube.com/vi/moWaruuaEP0/0.jpg)](https://www.youtube.com/watch?v=moWaruuaEP0)
+
 
 
 ## Adding the Library to gradle file
