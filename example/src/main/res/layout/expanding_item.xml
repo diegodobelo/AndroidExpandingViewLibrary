@@ -16,15 +16,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="94dp">
 
-    <com.diegodobelo.expandinganimlib.CustomTextView
+    <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:fontFamily="@font/muli"
         android:gravity="center_vertical|start"
         android:textColor="@color/white"
         android:textSize="22sp"
-        app:fontFamily="Muli-Regular.ttf"/>
+        android:textStyle="italic"/>
 
     <ImageView
         android:id="@+id/add_more_sub_items"

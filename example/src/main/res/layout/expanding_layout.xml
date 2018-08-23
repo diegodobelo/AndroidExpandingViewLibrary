@@ -23,6 +23,6 @@
     app:item_layout="@layout/expanding_item"
     app:separator_layout="@layout/separator_layout"
     app:show_animation="true"
-    app:show_indicator="false"
+    app:show_indicator="true"
     app:start_collapsed="true"
     app:sub_item_layout="@layout/expanding_sub_item"/>

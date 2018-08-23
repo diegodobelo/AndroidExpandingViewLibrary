@@ -16,7 +16,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp">
 
-    <com.diegodobelo.expandinganimlib.CustomTextView
+    <TextView
         android:id="@+id/sub_title"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -25,10 +25,11 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:fontFamily="@font/muli"
         android:gravity="center_vertical"
         android:textColor="@color/white"
         android:textSize="18sp"
-        app:fontFamily="Muli-Light.ttf"/>
+        android:textStyle="normal"/>
 
     <ImageView
         android:id="@+id/remove_sub_item"
