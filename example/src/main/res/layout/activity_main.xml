@@ -12,11 +12,11 @@
     ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.diegodobelo.expandinganimlib.MainActivity"
-    android:background="@color/colorBackground">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorBackground"
+                tools:context="com.diegodobelo.expandinganimlib.MainActivity">
 
     <com.diegodobelo.expandingview.ExpandingList
         android:id="@+id/expanding_list_main"

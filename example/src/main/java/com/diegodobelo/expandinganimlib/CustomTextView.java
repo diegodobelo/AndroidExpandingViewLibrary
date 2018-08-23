@@ -3,8 +3,9 @@ package com.diegodobelo.expandinganimlib;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.util.AttributeSet;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 /**
  * Created by diego on 5/22/16.

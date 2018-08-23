@@ -12,9 +12,9 @@
     ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
     <RelativeLayout
         android:id="@+id/indicator_container"
         android:layout_width="wrap_content"
@@ -25,28 +25,29 @@
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:background="@drawable/expanding_item_circle_base">
+
             <ImageView
                 android:id="@+id/indicator_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"/>
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"/>
         </RelativeLayout>
 
         <View
             android:id="@+id/icon_indicator_middle"
             android:layout_width="32dp"
             android:layout_height="0dp"
-            android:layout_marginTop="-16dp"
             android:layout_below="@id/icon_indicator_top"
+            android:layout_marginTop="-16dp"
             android:background="@android:color/transparent"/>
 
         <View
             android:id="@+id/icon_indicator_bottom"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginTop="-16dp"
             android:layout_below="@id/icon_indicator_middle"
+            android:layout_marginTop="-16dp"
             android:background="@drawable/expanding_item_circle_base"/>
 
     </RelativeLayout>
@@ -55,8 +56,8 @@
         android:id="@+id/base_list_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/indicator_container"
         android:layout_toEndOf="@id/indicator_container"
+        android:layout_toRightOf="@id/indicator_container"
         android:orientation="vertical"/>
 
     <LinearLayout
@@ -64,8 +65,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/base_list_layout"
-        android:layout_alignLeft="@id/base_list_layout"
         android:layout_alignStart="@id/base_list_layout"
+        android:layout_alignLeft="@id/base_list_layout"
         android:orientation="vertical"/>
 
     <ViewStub

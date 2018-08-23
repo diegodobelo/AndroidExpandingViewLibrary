@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 public class CustomViewUtils {
     /**
      * Set a View height in pixels.
-     * @param v The view to set the height.
+     *
+     * @param v      The view to set the height.
      * @param height The height in pixels.
      */
     public static void setViewHeight(View v, int height) {
@@ -21,7 +22,8 @@ public class CustomViewUtils {
 
     /**
      * Set a View width in pixels.
-     * @param v The view to set the width.
+     *
+     * @param v     The view to set the width.
      * @param width The width in pixels.
      */
     public static void setViewWidth(View v, int width) {
@@ -32,7 +34,8 @@ public class CustomViewUtils {
 
     /**
      * Set a View margin top.
-     * @param v The View to set the margin top.
+     *
+     * @param v         The View to set the margin top.
      * @param marginTop the margin top in pixles
      */
     public static void setViewMarginTop(View v, int marginTop) {
@@ -41,10 +44,11 @@ public class CustomViewUtils {
 
     /**
      * Set a View margin.
-     * @param v The view to set margins.
-     * @param left The margin at left in pixels
-     * @param top The margin at top in pixels
-     * @param right The margin at right in pixels
+     *
+     * @param v      The view to set margins.
+     * @param left   The margin at left in pixels
+     * @param top    The margin at top in pixels
+     * @param right  The margin at right in pixels
      * @param bottom The margin at bottom in pixels
      */
     public static void setViewMargin(View v, int left, int top, int right, int bottom) {
