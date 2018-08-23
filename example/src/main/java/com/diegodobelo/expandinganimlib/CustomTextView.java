@@ -3,13 +3,13 @@ package com.diegodobelo.expandinganimlib;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 /**
  * Created by diego on 5/22/16.
  */
-public class CustomTextView extends TextView {
+public class CustomTextView extends AppCompatTextView {
     public CustomTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setCustomFont(attrs);
