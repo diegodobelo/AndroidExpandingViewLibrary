@@ -1,14 +1,14 @@
 /**
- Copyright (c) 2016, Diego Bezerra <diego.bezerra@gmail.com>
- Permission to use, copy, modify, and/or distribute this software for any purpose
- with or without fee is hereby granted, provided that the above copyright notice
- and this permission notice appear in all copies.
- THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
- REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
- FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT,
- OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
- DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
- ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ * Copyright (c) 2016, Diego Bezerra <diego.bezerra@gmail.com>
+ * Permission to use, copy, modify, and/or distribute this software for any purpose
+ * with or without fee is hereby granted, provided that the above copyright notice
+ * and this permission notice appear in all copies.
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+ * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT,
+ * OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+ * DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  **/
 package com.diegodobelo.expandingview;
 
@@ -19,8 +19,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +29,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import utils.CustomViewUtils;
 
 /**
@@ -184,17 +184,6 @@ public class ExpandingItem extends RelativeLayout {
     private OnItemStateChanged mListener;
 
     /**
-     * Interface to notify item state changed.
-     */
-    public interface OnItemStateChanged {
-        /**
-         * Notify if item was expanded or collapsed.
-         * @param expanded true if expanded. false otherwise.
-         */
-        void itemCollapseStateChanged(boolean expanded);
-    }
-
-    /**
      * Constructor.
      * @param context
      * @param attrs
@@ -265,13 +254,13 @@ public class ExpandingItem extends RelativeLayout {
         mInflater = LayoutInflater.from(context);
         mBaseLayout = (RelativeLayout) mInflater.inflate(R.layout.expanding_item_base_layout,
                 null, false);
-        mBaseListLayout = (LinearLayout) mBaseLayout.findViewById(R.id.base_list_layout);
-        mBaseSubListLayout = (LinearLayout) mBaseLayout.findViewById(R.id.base_sub_list_layout);
-        mIndicatorImage = (ImageView) mBaseLayout.findViewById(R.id.indicator_image);
+        mBaseListLayout = mBaseLayout.findViewById(R.id.base_list_layout);
+        mBaseSubListLayout = mBaseLayout.findViewById(R.id.base_sub_list_layout);
+        mIndicatorImage = mBaseLayout.findViewById(R.id.indicator_image);
         mBaseLayout.findViewById(R.id.icon_indicator_top).bringToFront();
-        mSeparatorStub = (ViewStub) mBaseLayout.findViewById(R.id.base_separator_stub);
+        mSeparatorStub = mBaseLayout.findViewById(R.id.base_separator_stub);
         mIndicatorBackground = mBaseLayout.findViewById(R.id.icon_indicator_middle);
-        mIndicatorContainer = (ViewGroup) mBaseLayout.findViewById(R.id.indicator_container);
+        mIndicatorContainer = mBaseLayout.findViewById(R.id.indicator_container);
         mIndicatorContainer.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,12 +293,12 @@ public class ExpandingItem extends RelativeLayout {
             @Override
             public void run() {
                 CustomViewUtils.setViewMargin(mIndicatorContainer,
-                        mIndicatorMarginLeft, mItemLayout.getMeasuredHeight()/2 - mIndicatorSize/2, mIndicatorMarginRight, 0);
+                        mIndicatorMarginLeft, mItemLayout.getMeasuredHeight() / 2 - mIndicatorSize / 2, mIndicatorMarginRight, 0);
             }
         });
 
-        CustomViewUtils.setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_middle), (-1 * mIndicatorSize/2));
-        CustomViewUtils.setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_bottom), (-1 * mIndicatorSize/2));
+        CustomViewUtils.setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_middle), (-1 * mIndicatorSize / 2));
+        CustomViewUtils.setViewMarginTop(mBaseLayout.findViewById(R.id.icon_indicator_bottom), (-1 * mIndicatorSize / 2));
 
     }
 
@@ -406,8 +395,8 @@ public class ExpandingItem extends RelativeLayout {
      * @param color The color value.
      */
     public void setIndicatorColor(int color) {
-        ((GradientDrawable)findViewById(R.id.icon_indicator_top).getBackground().mutate()).setColor(color);
-        ((GradientDrawable)findViewById(R.id.icon_indicator_bottom).getBackground().mutate()).setColor(color);
+        ((GradientDrawable) findViewById(R.id.icon_indicator_top).getBackground().mutate()).setColor(color);
+        ((GradientDrawable) findViewById(R.id.icon_indicator_bottom).getBackground().mutate()).setColor(color);
         findViewById(R.id.icon_indicator_middle).setBackgroundColor(color);
     }
 
@@ -636,13 +625,13 @@ public class ExpandingItem extends RelativeLayout {
         animation.setDuration(mAnimationDuration);
         int delay = index * mAnimationDuration / mSubItemCount;
         int invertedDelay = (mSubItemCount - index) * mAnimationDuration / mSubItemCount;
-        animation.setStartDelay(mSubItemsShown ? delay/2 : invertedDelay/2);
+        animation.setStartDelay(mSubItemsShown ? delay / 2 : invertedDelay / 2);
 
         animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float val = (float) animation.getAnimatedValue();
-                viewGroup.setX((mSubItemWidth/2 * val) - mSubItemWidth/2);
+                viewGroup.setX((mSubItemWidth / 2 * val) - mSubItemWidth / 2);
             }
         });
 
@@ -670,7 +659,7 @@ public class ExpandingItem extends RelativeLayout {
                 ValueAnimator.ofFloat(1f, 0f);
         animation.setDuration(mSubItemsShown ? mAnimationDuration * 2 : mAnimationDuration);
         int delay = index * mAnimationDuration / mSubItemCount;
-        animation.setStartDelay(mSubItemsShown ? delay/2 : 0);
+        animation.setStartDelay(mSubItemsShown ? delay / 2 : 0);
 
         animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -689,7 +678,7 @@ public class ExpandingItem extends RelativeLayout {
      */
     private void expandIconIndicator(float startingPos) {
         if (mIndicatorBackground != null) {
-            final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize/2 + mItemHeight/2;
+            final int totalHeight = (mSubItemHeight * mSubItemCount) - mIndicatorSize / 2 + mItemHeight / 2;
             mCurrentSubItemsHeight = totalHeight;
             ValueAnimator animation = mSubItemsShown ?
                     ValueAnimator.ofFloat(startingPos, totalHeight) :
@@ -751,12 +740,12 @@ public class ExpandingItem extends RelativeLayout {
     private void animateSubItemAppearance(final View subItem, boolean isAdding) {
         ValueAnimator alphaAnimation = isAdding ?
                 ValueAnimator.ofFloat(0f, 1f) : ValueAnimator.ofFloat(1f, 0f);
-        alphaAnimation.setDuration(isAdding ? mAnimationDuration*2 : mAnimationDuration/2);
+        alphaAnimation.setDuration(isAdding ? mAnimationDuration * 2 : mAnimationDuration / 2);
 
         ValueAnimator heightAnimation = isAdding ?
                 ValueAnimator.ofFloat(0f, mSubItemHeight) : ValueAnimator.ofFloat(mSubItemHeight, 0f);
-        heightAnimation.setDuration(mAnimationDuration/2);
-        heightAnimation.setStartDelay(mAnimationDuration/2);
+        heightAnimation.setDuration(mAnimationDuration / 2);
+        heightAnimation.setStartDelay(mAnimationDuration / 2);
 
         alphaAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -786,6 +775,17 @@ public class ExpandingItem extends RelativeLayout {
                 }
             });
         }
+    }
+
+    /**
+     * Interface to notify item state changed.
+     */
+    public interface OnItemStateChanged {
+        /**
+         * Notify if item was expanded or collapsed.
+         * @param expanded true if expanded. false otherwise.
+         */
+        void itemCollapseStateChanged(boolean expanded);
     }
 
 }
